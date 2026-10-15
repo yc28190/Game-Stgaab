@@ -1,0 +1,41 @@
+{
+	"crystal_cave": {
+		"name": "1st Floor - Crystal Cave", "depth": 1,
+		"width": 80, "height": 60, "rooms": 20,
+		"floor_color": "#2c3346", "wall_color": "#5d7196", "dark_floor_color": "#222736", "accent": "#7fd6ff",
+		"dark_room_chance": 0.45, "dark_corridors": true,
+		"regions": {"N": ["goblin"], "W": ["ghoul"], "E": ["blade_wolf"], "S": ["gnome"], "C": ["goblin", "ghoul", "blade_wolf", "gnome"]},
+		"pack": [1, 1],
+		"initial_monsters": 26, "max_monsters": 40, "respawn_every": 25,
+		"traps": {"region": "N", "count": 8},
+		"items": 10,
+		"portals": [{"region": "N", "to": "goblin_forest"}, {"region": "W", "to": "deadlands"}],
+		"source": "Crystal Cave: goblins north, ghouls west, blade wolves east, gnomes south (bestiary ch. 4, 11, 25). Dark zones (ch. 2-10)."
+	},
+	"goblin_forest": {
+		"name": "2nd Floor - Goblin Forest", "depth": 2,
+		"width": 80, "height": 60, "rooms": 22,
+		"floor_color": "#23361f", "wall_color": "#3f6b35", "dark_floor_color": "#1c2d19", "accent": "#b5d64a",
+		"dark_room_chance": 0.0, "dark_corridors": false,
+		"regions": {"N": ["goblin", "goblin", "goblin_archer"], "W": ["goblin", "goblin", "goblin_archer"], "E": ["goblin", "goblin", "goblin_archer"], "S": ["goblin", "goblin", "goblin_archer"], "C": ["goblin", "goblin_archer"]},
+		"pack": [3, 6],
+		"initial_monsters": 9, "max_monsters": 14, "respawn_every": 40,
+		"traps": {"region": "any", "count": 12},
+		"items": 10,
+		"portals": [{"region": "C", "to": "crystal_cave"}],
+		"source": "Goblin Forest: groups of ~10 goblins with swordsmen and archers, traps (ch. 11-13)."
+	},
+	"deadlands": {
+		"name": "2nd Floor - Deadlands", "depth": 2,
+		"width": 80, "height": 60, "rooms": 20,
+		"floor_color": "#30283a", "wall_color": "#5e4a72", "dark_floor_color": "#271f30", "accent": "#9b6bd6",
+		"dark_room_chance": 0.25, "dark_corridors": false,
+		"regions": {"N": ["deathfiend", "ghoul", "ghoul"], "W": ["deathfiend", "ghoul", "ghoul"], "E": ["deathfiend", "ghoul", "ghoul"], "S": ["deathfiend", "ghoul", "ghoul"], "C": ["ghoul", "deathfiend"]},
+		"pack": [1, 1],
+		"initial_monsters": 20, "max_monsters": 30, "respawn_every": 30,
+		"traps": {"region": "none", "count": 0},
+		"items": 10,
+		"portals": [{"region": "C", "to": "crystal_cave"}],
+		"source": "Deadlands / Land of the Dead: deathfiends and ghouls (ch. 23-24)."
+	}
+}

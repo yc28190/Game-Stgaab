@@ -1,0 +1,37 @@
+{
+	"goblin": {
+		"name": "Goblin Essence", "grade": 9, "color": "#7cc24a",
+		"stats": {"max_hp": 5, "atk": 1},
+		"passive": "", "active": "",
+		"sell": 400000,
+		"source": "ch. 19 - the novel gives no numbers; stat values are gameplay placeholders"
+	},
+	"goblin_archer": {
+		"name": "Goblin Archer Essence", "grade": 9, "color": "#b5d64a",
+		"stats": {"atk": 1},
+		"passive": "poison_strike", "active": "thief_step",
+		"sell": 700000,
+		"source": "ch. 13 - Poison Arrow (passive), Thief Step (active stealth)"
+	},
+	"blade_wolf": {
+		"name": "Blade Wolf Essence", "grade": 9, "color": "#c9ccd6",
+		"stats": {"atk": 1},
+		"passive": "tracker_nose", "active": "",
+		"sell": 500000,
+		"source": "ch. 11 - enhanced sense of smell for tracking"
+	},
+	"gnome": {
+		"name": "Gnome Essence", "grade": 9, "color": "#c79a5b",
+		"stats": {"def": 1},
+		"passive": "", "active": "earth_gnome",
+		"sell": 600000,
+		"source": "ch. 25 - Earth Gnome: blend into the surroundings, cannot move while it lasts"
+	},
+	"deathfiend": {
+		"name": "Deathfiend Essence", "grade": 8, "color": "#9b6bd6",
+		"stats": {"max_hp": 15, "atk": 2},
+		"passive": "preservation", "active": "call_of_the_dead",
+		"sell": 2000000,
+		"source": "ch. 23-24 - Preservation of the Flesh, Call of the Dead (coveted essence)"
+	}
+}
