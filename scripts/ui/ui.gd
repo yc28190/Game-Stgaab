@@ -14,7 +14,8 @@ const CONTROLS_HELP := """Move: arrow keys, WASD (ZQSD on AZERTY), numpad, or cl
 Diagonals: Q / E / Z / C (A / E / W / C on AZERTY) or numpad 7 9 1 3
 Attack: move into a monster      Wait a turn: Space or numpad 5
 Enter: step through a portal     I: bag      1-4: essence skills
-R: rest until healed     T: make camp (sleep 6 h)     H: help     Esc: close"""
+R: rest until healed     T: make camp (sleep 6 h)     H: help     Esc: close
+Holding a key keeps walking, but stops when a monster appears or is within 2 tiles."""
 
 static var _theme: Theme
 

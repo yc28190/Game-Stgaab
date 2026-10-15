@@ -7,12 +7,17 @@ var _checks := 0
 
 
 func _init() -> void:
+	_run.call_deferred()
+
+
+func _run() -> void:
 	test_generation()
 	test_combat_and_progression()
 	test_inventory()
 	test_simulated_runs()
 	test_camp_until_closing()
 	test_month_and_tax()
+	await test_held_key_near_enemy()
 	print("\n%d checks, %d failures" % [_checks, _failures])
 	quit(1 if _failures > 0 else 0)
 
@@ -176,3 +181,56 @@ func test_month_and_tax() -> void:
 	for i in Rules.MONTHS_PER_YEAR:
 		Profile.advance_month(poor)
 	check(poor["game_over"] == "tax", "unpaid tax ends the game")
+
+
+func _key(code: int, echo: bool) -> InputEventKey:
+	var e := InputEventKey.new()
+	e.physical_keycode = code
+	e.pressed = true
+	e.echo = echo
+	return e
+
+
+## Holding a direction must not repeat attacks or moves while a monster is close.
+func test_held_key_near_enemy() -> void:
+	var p := Profile.create()
+	var screen := DungeonScreen.new()
+	screen.run = DungeonRun.new(p, 3)
+	root.add_child(screen)
+	await process_frame
+	var run := screen.run
+	# Clear the floor, then put a goblin right next to the player in a free direction.
+	for a in run.actors.duplicate():
+		if a.faction == Actor.MONSTER:
+			run.actors.erase(a)
+	var dir := Vector2i.ZERO
+	for d in DungeonRun.DIRS8:
+		if run.can_step(run.player.pos, run.player.pos + d):
+			dir = d
+			break
+	var g := Actor.from_monster("goblin")
+	g.status.erase("hidden")
+	g.max_hp = 1000
+	g.hp = 1000
+	g.pos = run.player.pos + dir
+	run.actors.append(g)
+	run._update_fov()
+	var key: int = {Vector2i(0, -1): KEY_UP, Vector2i(0, 1): KEY_DOWN, Vector2i(-1, 0): KEY_LEFT, Vector2i(1, 0): KEY_RIGHT,
+		Vector2i(-1, -1): KEY_KP_7, Vector2i(1, -1): KEY_KP_9, Vector2i(-1, 1): KEY_KP_1, Vector2i(1, 1): KEY_KP_3}[dir]
+	var t0 := run.turn
+	screen._unhandled_input(_key(key, false))
+	check(run.turn == t0 + 1, "a fresh key press attacks the adjacent monster")
+	for i in 5:
+		screen._unhandled_input(_key(key, true))
+	check(run.turn == t0 + 1, "held key (echo) is ignored next to a monster (turn %d)" % run.turn)
+	screen._unhandled_input(_key(key, false))
+	check(run.turn == t0 + 2, "pressing again attacks again")
+	# Far from any monster, holding a key keeps walking.
+	run.actors.erase(g)
+	run._update_fov()
+	var t1 := run.turn
+	screen._unhandled_input(_key(KEY_KP_5, false))
+	for i in 3:
+		screen._unhandled_input(_key(KEY_KP_5, true))
+	check(run.turn == t1 + 4, "held key repeats when no monster is near (turn %d)" % (run.turn - t1))
+	screen.queue_free()

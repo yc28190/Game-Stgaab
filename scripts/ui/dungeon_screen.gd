@@ -5,12 +5,17 @@ extends Node
 signal run_over(run: DungeonRun)
 
 const AUTO_STEP_SECONDS := 0.06
+## Holding a key repeats moves, except when a monster is this close: then every step or attack
+## needs its own key press, so you can't walk into a fight by accident.
+const DANGER_RANGE := 2
 
 var run: DungeonRun
 var view: DungeonView
 var hud: Hud
 var _auto_path: Array[Vector2i] = []
 var _auto_timer := 0.0
+## Set when a monster shows up while a key is held: repeats stay off until the key is pressed again.
+var _hold_stopped := false
 
 
 func _ready() -> void:
@@ -46,6 +51,12 @@ func _unhandled_input(event: InputEvent) -> void:
 	if not (event is InputEventKey and event.pressed):
 		return
 	var key: int = event.physical_keycode
+	if event.echo:
+		if _hold_stopped or hud.overlay != "" or _danger_near():
+			get_viewport().set_input_as_handled()
+			return
+	else:
+		_hold_stopped = false
 	_auto_path.clear()
 	match hud.overlay:
 		"end":
@@ -66,6 +77,7 @@ func _unhandled_input(event: InputEvent) -> void:
 				hud.close_overlay()
 			return
 
+	var seen_before := _visible_hostiles()
 	var dir := _dir_for(key)
 	if dir != Vector2i.ZERO:
 		run.try_move(dir)
@@ -91,8 +103,27 @@ func _unhandled_input(event: InputEvent) -> void:
 					run.use_skill(skills[i])
 			_:
 				return
+	if event.echo and _visible_hostiles() > seen_before:
+		_hold_stopped = true
+		run.say("A monster appears! You stop.")
 	get_viewport().set_input_as_handled()
 	_after_action()
+
+
+func _visible_hostiles() -> int:
+	var n := 0
+	for a in run.actors:
+		if a.faction == Actor.MONSTER and run.is_visible_to_player(a):
+			n += 1
+	return n
+
+
+func _danger_near() -> bool:
+	for a in run.actors:
+		if a.faction == Actor.MONSTER and run.is_visible_to_player(a) \
+				and DungeonRun.cheb(a.pos, run.player.pos) <= DANGER_RANGE:
+			return true
+	return false
 
 
 func _dir_for(key: int) -> Vector2i:

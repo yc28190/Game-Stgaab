@@ -44,6 +44,8 @@ Fan project, prototype stage. Graphics are placeholder shapes.
 | Help | H |
 
 Movement uses physical key positions, so it works on QWERTY and AZERTY keyboards.
+Holding a key keeps walking, but when a monster is within 2 tiles every step or attack needs its own key press,
+and a held key stops as soon as a new monster comes into view.
 
 ## Project layout
 
