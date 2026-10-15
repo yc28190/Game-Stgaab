@@ -19,15 +19,15 @@ const TRACKER_NOSE_RANGE := 12
 
 const SKILLS := {
 	"thief_step": {
-		"name": "Thief Step", "cooldown": 60,
+		"name": "Thief Step", "cooldown": 60, "sp": 10,
 		"desc": "Stealth for 15 turns: monsters only notice you when adjacent. Attacking breaks it.",
 	},
 	"earth_gnome": {
-		"name": "Earth Gnome", "cooldown": 40,
+		"name": "Earth Gnome", "cooldown": 40, "sp": 8,
 		"desc": "Blend into the ground (stealth) until you move, up to 40 turns.",
 	},
 	"call_of_the_dead": {
-		"name": "Call of the Dead", "cooldown": 120,
+		"name": "Call of the Dead", "cooldown": 120, "sp": 25,
 		"desc": "Two ghouls crawl out of the ground and fight for you for 40 turns.",
 	},
 }
@@ -67,6 +67,7 @@ var essences_absorbed: Array[String] = []
 var sleeping := false
 
 var _regen_every := Rules.PLAYER_REGEN_EVERY
+var _appetite := 10
 var _tracker_nose := false
 var _player_attacked := false
 
@@ -121,7 +122,7 @@ func ally() -> Actor:
 func is_visible_to_player(a: Actor) -> bool:
 	if a.faction == Actor.PARTY:
 		return true
-	if a.status.has("hidden") and cheb(a.pos, player.pos) > 2:
+	if a.status.has("hidden") and cheb(a.pos, player.pos) > Stats.hidden_reveal_range(player.perception):
 		return false
 	return fov.has(a.pos)
 
@@ -134,7 +135,7 @@ func is_smelled(a: Actor) -> bool:
 
 func vision_radius() -> int:
 	if map.is_dark(player.pos):
-		return Rules.TORCH_RADIUS if torch_turns > 0 else Rules.DARK_RADIUS
+		return Rules.TORCH_RADIUS if torch_turns > 0 else Stats.dark_radius(player.perception)
 	return Rules.LIGHT_RADIUS
 
 
@@ -302,6 +303,11 @@ func use_skill(skill_id: String) -> bool:
 	if skill_cooldown(skill_id) > 0:
 		say("%s is not ready (%d turns)." % [SKILLS[skill_id]["name"], skill_cooldown(skill_id)])
 		return false
+	var cost := int(SKILLS[skill_id]["sp"])
+	if player.sp < cost:
+		say("Not enough soul power for %s (%d SP needed)." % [SKILLS[skill_id]["name"], cost])
+		return false
+	player.sp -= cost
 	match skill_id:
 		"thief_step":
 			player.status["stealth"] = 15
@@ -384,7 +390,7 @@ func rest() -> int:
 		say("You can't rest with enemies in sight.")
 		return 0
 	var n := 0
-	while n < Rules.REST_TURNS and player.hp < player.max_hp and not over:
+	while n < Rules.REST_TURNS and (player.hp < player.max_hp or player.sp < player.max_sp) and not over:
 		_player_attacked = false
 		_end_turn()
 		n += 1
@@ -464,7 +470,7 @@ func finish() -> Dictionary:
 
 func _end_turn() -> void:
 	turn += 1
-	satiety = maxf(0.0, satiety - Rules.SATIETY_PER_TURN)
+	satiety = maxf(0.0, satiety - Stats.hunger_per_turn(_appetite))
 	if satiety <= 0.0:
 		player.hp -= 1
 		if turn % 10 == 0:
@@ -473,6 +479,9 @@ func _end_turn() -> void:
 			_end("starved")
 	elif player.hp < player.max_hp and (turn % _regen_every == 0 or (sleeping and turn % 2 == 0)):
 		player.hp += 1
+	if player.sp < player.max_sp and (turn % 5 == 0 or (sleeping and turn % 2 == 0)):
+		player.sp += 1
+	_spot_traps()
 	if torch_turns > 0:
 		torch_turns -= 1
 		if torch_turns == 0:
@@ -487,7 +496,7 @@ func _end_turn() -> void:
 			break
 		if a == player or not a.alive() or not a in actors:
 			continue
-		a.energy += a.speed
+		a.energy += Stats.energy_per_player_action(a.speed, player.speed)
 		while a.energy >= 100 and a.alive() and not over and a in actors:
 			a.energy -= 100
 			_act(a)
@@ -573,22 +582,24 @@ func _monster_act(m: Actor) -> void:
 
 
 func _find_target(m: Actor) -> Actor:
+	# Pick the party member with the best threat-minus-distance score among those it can see.
 	var best: Actor = null
-	var best_d := 999
+	var best_score := -INF
 	for a in actors:
 		if a.faction != Actor.PARTY or not a.alive():
 			continue
 		var d := cheb(m.pos, a.pos)
-		if d > m.sight or d >= best_d:
+		if d > m.sight:
 			continue
 		if a.status.has("stealth") and d > 1:
 			continue
 		var lit := not map.is_dark(a.pos) or (a.is_player and torch_turns > 0)
 		if not lit and d > Rules.DARK_DETECT_RADIUS:
 			continue
-		if los(m.pos, a.pos):
+		var score := a.threat - 2.0 * d
+		if score > best_score and los(m.pos, a.pos):
 			best = a
-			best_d = d
+			best_score = score
 	return best
 
 
@@ -678,18 +689,22 @@ func _attack(a: Actor, d: Actor, ranged := false) -> void:
 	var d_name := "you" if d.is_player else d.name
 	if d.is_player:
 		_player_attacked = true
-	if rng.randf() > 0.9:
+	if rng.randf() > Stats.hit_chance(a.agility, d.agility):
 		if shown:
 			say("%s %s %s." % [a_name, "miss" if a.is_player else "misses", d_name])
 		return
-	var dmg := maxi(1, int(round(a.atk * rng.randf_range(0.8, 1.25))) - d.def)
+	var dmg := maxi(1, int(round(a.atk * rng.randf_range(0.8, 1.25))) - d.phys_res)
 	var crit := rng.randf() < 0.06
 	if crit:
 		dmg = int(dmg * 1.5)
 	d.hp -= dmg
 	d.status.erase("hidden")
 	if a.poison_on_hit and d.alive():
-		d.status["poison"] = 4
+		if rng.randf() < Stats.poison_resist_chance(d.poison_res):
+			if d.is_player:
+				say("You shake off the poison.")
+		else:
+			d.status["poison"] = 4
 	if shown:
 		var verb := "shoot" if ranged else "hit"
 		if not a.is_player:
@@ -737,11 +752,21 @@ func _gain_exp(amount: int) -> void:
 func _apply_player_stats(full_heal: bool) -> void:
 	var s := Profile.player_stats(profile)
 	var ratio := float(player.hp) / player.max_hp if player.max_hp > 1 else 1.0
+	var sp_ratio := float(player.sp) / player.max_sp if player.max_sp > 0 else 1.0
 	player.max_hp = int(s["max_hp"])
+	player.max_sp = int(s["max_sp"])
 	player.atk = int(s["atk"])
-	player.def = int(s["def"])
+	player.phys_res = int(s["phys_res"])
+	player.magic_res = int(s["magic_res"])
+	player.agility = int(s["agility"])
+	player.speed = maxi(10, int(s["speed"]))
+	player.perception = int(s["perception"])
+	player.poison_res = int(s["poison_res"])
+	player.threat = int(s["threat"])
+	_appetite = int(s["appetite"])
 	_regen_every = int(s["regen_every"])
 	player.hp = player.max_hp if full_heal else clampi(int(round(ratio * player.max_hp)), 1, player.max_hp)
+	player.sp = player.max_sp if full_heal else clampi(int(round(sp_ratio * player.max_sp)), 0, player.max_sp)
 	player.poison_on_hit = Profile.has_passive(profile, "poison_strike")
 	_tracker_nose = Profile.has_passive(profile, "tracker_nose")
 
@@ -753,8 +778,20 @@ func _break_earth_gnome() -> void:
 		say("Your camouflage breaks.")
 
 
+## Perception: every turn, a chance to notice each hidden trap next to you.
+func _spot_traps() -> void:
+	for d in DIRS8:
+		var p := player.pos + d
+		if map.traps.has(p) and not map.traps[p] and rng.randf() < Stats.trap_spot_chance(player.perception):
+			map.traps[p] = true
+			say("You spot a goblin trap.")
+
+
 func _on_player_entered(p: Vector2i) -> void:
-	if map.traps.has(p):
+	if map.traps.has(p) and map.traps[p]:
+		map.traps.erase(p)
+		say("You carefully disarm the goblin trap.")
+	elif map.traps.has(p):
 		map.traps.erase(p)
 		player.hp -= 6
 		player.status["immobile"] = 3
@@ -802,9 +839,8 @@ func _remove_ground_essence(p: Vector2i, essence_id: String) -> void:
 
 func _format_stats(stats: Dictionary) -> Array[String]:
 	var out: Array[String] = []
-	var labels := {"max_hp": "HP", "atk": "ATK", "def": "DEF"}
 	for k in stats:
-		out.append("%s %+d" % [labels.get(k, k), int(stats[k])])
+		out.append("%s %+d" % [Stats.LABELS.get(k, k), int(stats[k])])
 	return out
 
 
@@ -889,13 +925,14 @@ func _update_fov() -> void:
 	fov.clear()
 	var far := maxi(Rules.LIGHT_RADIUS, Rules.TORCH_RADIUS)
 	var torch_r := Rules.TORCH_RADIUS if torch_turns > 0 else 0
+	var dark_r := Stats.dark_radius(player.perception)
 	for dy in range(-far, far + 1):
 		for dx in range(-far, far + 1):
 			var p := player.pos + Vector2i(dx, dy)
 			if not map.in_bounds(p):
 				continue
 			var d2 := dx * dx + dy * dy
-			var seen := d2 <= Rules.DARK_RADIUS * Rules.DARK_RADIUS + Rules.DARK_RADIUS \
+			var seen := d2 <= dark_r * dark_r + dark_r \
 				or d2 <= torch_r * torch_r + torch_r \
 				or (not map.is_dark(p) and d2 <= Rules.LIGHT_RADIUS * Rules.LIGHT_RADIUS + Rules.LIGHT_RADIUS)
 			if seen and los(player.pos, p):

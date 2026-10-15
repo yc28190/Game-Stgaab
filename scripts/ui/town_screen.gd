@@ -64,6 +64,7 @@ func _refresh() -> void:
 		c.queue_free()
 	_build_status()
 	_build_gate()
+	_build_character()
 	_build_exchange()
 	_build_market()
 	_build_inn()
@@ -107,7 +108,9 @@ func _build_status() -> void:
 		_status.add_child(UI.label(text, size, color, true))
 	add.call("Bjorn, son of Yandel", 20, UI.ACCENT)
 	add.call("Level %d    EXP %d / %d" % [int(_p["level"]), int(_p["exp"]), Profile.exp_to_next(int(_p["level"]))])
-	add.call("HP %d    ATK %d    DEF %d" % [int(s["max_hp"]), int(s["atk"]), int(s["def"])])
+	add.call("HP %d    SP %d    Attack %d" % [int(s["max_hp"]), int(s["max_sp"]), int(s["atk"])])
+	var sheet_btn := UI.button("Character sheet", func(): _tabs.current_tab = 1)
+	_status.add_child(sheet_btn)
 	add.call("Stones: %s" % GameData.format_stones(_stones()), 17, UI.ACCENT)
 	add.call("Year %d, month %d" % [int(_p["year"]), int(_p["month"])])
 	var months := Profile.months_until_tax(_p)
@@ -167,6 +170,11 @@ func _build_gate() -> void:
 	box.add_child(UI.label(UI.CONTROLS_HELP, 14, UI.DIM, true))
 
 
+func _build_character() -> void:
+	var box := _page("Character")
+	box.add_child(StatSheet.build(_p))
+
+
 func _build_exchange() -> void:
 	var box := _page("Exchange")
 	box.add_child(UI.label("The adventurers' exchange buys mana stones and essences.", 15, UI.DIM, true))
@@ -222,9 +230,9 @@ func _build_market() -> void:
 		var slot: String = it["type"]
 		var equipped: bool = _p["equipment"][slot] == id
 		var bonus := []
-		for k in ["atk", "def", "hp"]:
-			if it.has(k):
-				bonus.append("%s +%d" % [k.to_upper(), int(it[k])])
+		var item_stats: Dictionary = it.get("stats", {})
+		for k in item_stats:
+			bonus.append("%s %+d" % [Stats.LABELS.get(k, k), int(item_stats[k])])
 		var item_id: String = id
 		var btn := UI.button("Equipped" if equipped else "Buy & equip", func(): _buy_equipment(item_id),
 			not equipped and _stones() >= int(it["price"]))

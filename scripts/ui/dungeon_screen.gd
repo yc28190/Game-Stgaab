@@ -72,8 +72,8 @@ func _unhandled_input(event: InputEvent) -> void:
 				KEY_N, KEY_ESCAPE:
 					_on_overlay_action("leave", "")
 			return
-		"inventory", "help":
-			if key in [KEY_ESCAPE, KEY_I, KEY_H, KEY_F1]:
+		"inventory", "help", "stats":
+			if key in [KEY_ESCAPE, KEY_I, KEY_H, KEY_F1, KEY_P]:
 				hud.close_overlay()
 			return
 
@@ -90,6 +90,8 @@ func _unhandled_input(event: InputEvent) -> void:
 					run.say("There is no portal here.")
 			KEY_I:
 				hud.show_inventory()
+			KEY_P:
+				hud.show_stats()
 			KEY_H, KEY_F1:
 				hud.show_help()
 			KEY_R:

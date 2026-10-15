@@ -14,6 +14,7 @@ func _run() -> void:
 	test_generation()
 	test_combat_and_progression()
 	test_inventory()
+	test_stats()
 	test_simulated_runs()
 	test_camp_until_closing()
 	test_month_and_tax()
@@ -234,3 +235,65 @@ func test_held_key_near_enemy() -> void:
 		screen._unhandled_input(_key(KEY_KP_5, true))
 	check(run.turn == t1 + 4, "held key repeats when no monster is near (turn %d)" % (run.turn - t1))
 	screen.queue_free()
+
+
+func test_stats() -> void:
+	var p := Profile.create()
+	var s := Profile.player_stats(p)
+	# Level 1 Bjorn must match the original prototype numbers (difficulty unchanged).
+	check(int(s["max_hp"]) == 50, "level 1 HP is 50")
+	check(int(s["atk"]) == 7, "level 1 attack is 7 (Strength 12 / 2 + club 1), got %d" % int(s["atk"]))
+	check(int(s["phys_res"]) == 2, "level 1 physical resistance is 2 (base + shield)")
+	check(int(s["max_sp"]) == 20, "level 1 SP is 20")
+	for k in Stats.ORDER:
+		check(s.has(k), "stat %s computed" % k)
+	var src := Profile.stat_sources(p)
+	var total := 0
+	for e in src["strength"]:
+		total += int(e[1])
+	check(total == int(s["strength"]), "strength breakdown adds up")
+
+	p["essences"].append("goblin_archer")
+	var s2 := Profile.player_stats(p)
+	check(int(s2["perception"]) == int(s["perception"]) + 4, "essence perception applies")
+	check(int(s2["poison_res"]) == 4, "essence poison resistance applies")
+
+	check(Stats.hunger_per_turn(20) > Stats.hunger_per_turn(10), "higher appetite empties the belly faster")
+	check(Stats.energy_per_player_action(100, 200) == 50, "a faster player gives monsters fewer actions")
+	check(Stats.hit_chance(20, 10) > Stats.hit_chance(10, 10), "agility improves hit chance")
+	check(Stats.trap_spot_chance(20) > Stats.trap_spot_chance(10), "perception improves trap spotting")
+
+	# Threat: with Bjorn and Ainar at the same distance, a monster goes for Bjorn.
+	var q := Profile.create()
+	q["allies"].append("ainar")
+	var run := DungeonRun.new(q, 11)
+	for a in run.actors.duplicate():
+		if a.faction == Actor.MONSTER:
+			run.actors.erase(a)
+	var ainar := run.ally()
+	var g := Actor.from_monster("goblin")
+	g.pos = run.player.pos
+	var placed := false
+	for d in DungeonRun.DIRS8:
+		var spot := run.player.pos + d * 2
+		if run.map.is_walkable(spot) and run.los(spot, run.player.pos) and run.los(spot, ainar.pos) \
+				and DungeonRun.cheb(spot, ainar.pos) == 2:
+			g.pos = spot
+			placed = true
+			break
+	check(placed, "threat test found a spot for the goblin")
+	if placed:
+		run.actors.append(g)
+		check(run._find_target(g) == run.player, "monsters prefer the high-threat barbarian")
+
+	# SP is spent by skills.
+	var r := Profile.create()
+	r["level"] = 3
+	r["essences"].append("goblin_archer")
+	var run2 := DungeonRun.new(r, 12)
+	var sp0 := run2.player.sp
+	check(run2.use_skill("thief_step"), "skill usable with enough SP")
+	check(run2.player.sp == sp0 - 10, "Thief Step costs 10 SP")
+	run2.player.cooldowns.clear()
+	run2.player.sp = 3
+	check(not run2.use_skill("thief_step"), "skill refused without enough SP")

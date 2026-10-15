@@ -1,50 +1,101 @@
 {
 	"bread": {
-		"name": "Rock-bread", "type": "food", "satiety": 30, "price": 20,
+		"name": "Rock-bread",
+		"type": "food",
+		"satiety": 30,
+		"price": 20,
 		"desc": "Hard as a rock, cheap, filling. (ch. 16, 22: ~20 stones)"
 	},
 	"potion": {
-		"name": "Healing Potion", "type": "heal", "heal": 40, "price": 20000,
+		"name": "Healing Potion",
+		"type": "heal",
+		"heal": 40,
+		"price": 20000,
 		"desc": "Restores 40 HP. Like the Parthran potion Drusz gave Bjorn (ch. 5)."
 	},
 	"antidote": {
-		"name": "Antidote", "type": "cure", "price": 5000,
+		"name": "Antidote",
+		"type": "cure",
+		"price": 5000,
 		"desc": "Cures poison."
 	},
 	"torch": {
-		"name": "Magic Torch", "type": "torch", "duration": 1440, "price": 10000,
+		"name": "Magic Torch",
+		"type": "torch",
+		"duration": 1440,
+		"price": 10000,
 		"desc": "Burns for 3 days. Lets you see in dark zones, but monsters see you too. (ch. 23: ~10,000 stones)"
 	},
 	"vial": {
-		"name": "Essence Vial", "type": "vial", "price": 300000,
+		"name": "Essence Vial",
+		"type": "vial",
+		"price": 300000,
 		"desc": "Stores an essence instead of absorbing it, so it can be sold. (ch. 31: 'outrageously expensive')"
 	},
 	"club": {
-		"name": "Wooden Club", "type": "weapon", "atk": 1, "price": 5000,
-		"desc": "Better than bare fists."
+		"name": "Wooden Club",
+		"type": "weapon",
+		"price": 5000,
+		"desc": "Better than bare fists.",
+		"stats": {
+			"atk": 1
+		}
 	},
 	"hammer": {
-		"name": "War Hammer", "type": "weapon", "atk": 3, "price": 120000,
-		"desc": "Like the hammer Bjorn took from Hans (ch. 7)."
+		"name": "War Hammer",
+		"type": "weapon",
+		"price": 120000,
+		"desc": "Like the hammer Bjorn took from Hans (ch. 7).",
+		"stats": {
+			"atk": 3
+		}
 	},
 	"mace": {
-		"name": "Iron Mace", "type": "weapon", "atk": 5, "price": 300000,
-		"desc": "Bjorn's weapon of choice (ch. 21)."
+		"name": "Iron Mace",
+		"type": "weapon",
+		"price": 300000,
+		"desc": "Bjorn's weapon of choice (ch. 21).",
+		"stats": {
+			"atk": 5
+		}
 	},
 	"round_shield": {
-		"name": "Round Shield", "type": "shield", "def": 1, "price": 10000,
-		"desc": "The shield Bjorn chose at the coming-of-age ceremony (ch. 3)."
+		"name": "Round Shield",
+		"type": "shield",
+		"price": 10000,
+		"desc": "The shield Bjorn chose at the coming-of-age ceremony (ch. 3).",
+		"stats": {
+			"phys_res": 1
+		}
 	},
 	"tower_shield": {
-		"name": "Tower Shield", "type": "shield", "def": 3, "price": 250000,
-		"desc": "A barbarian's best friend."
+		"name": "Tower Shield",
+		"type": "shield",
+		"price": 250000,
+		"desc": "A barbarian's best friend. Heavy: Agility -1.",
+		"stats": {
+			"phys_res": 3,
+			"agility": -1
+		}
 	},
 	"half_plate": {
-		"name": "Half Plate", "type": "body", "def": 3, "hp": 10, "price": 300000,
-		"desc": "Bought by Bjorn after his first big haul (ch. 21)."
+		"name": "Half Plate",
+		"type": "body",
+		"price": 300000,
+		"desc": "Bought by Bjorn after his first big haul (ch. 21). Heavy: Agility -1.",
+		"stats": {
+			"phys_res": 3,
+			"max_hp": 10,
+			"agility": -1
+		}
 	},
 	"helmet": {
-		"name": "Iron Helmet", "type": "head", "def": 1, "price": 80000,
-		"desc": "Protects the one thing a barbarian rarely uses."
+		"name": "Iron Helmet",
+		"type": "head",
+		"price": 80000,
+		"desc": "Protects the one thing a barbarian rarely uses.",
+		"stats": {
+			"phys_res": 1
+		}
 	}
 }

@@ -3,12 +3,6 @@ extends RefCounted
 ## The persistent character and town state. Stored as a plain Dictionary so it saves to JSON
 ## (note: JSON turns ints into floats, so always read numbers through int()).
 
-const BASE_HP := 50
-const HP_PER_LEVEL := 8
-const BASE_ATK := 6
-const BASE_DEF := 1
-
-
 static func create() -> Dictionary:
 	return {
 		"version": 1,
@@ -49,32 +43,59 @@ static func add_exp(p: Dictionary, amount: int) -> int:
 	return gained
 
 
+## Final stat values (see Stats.ORDER), plus "regen_every".
 static func player_stats(p: Dictionary) -> Dictionary:
+	return compute_stats(p)["values"]
+
+
+## Where each stat comes from, for the character sheet: stat -> Array of [source label, amount].
+static func stat_sources(p: Dictionary) -> Dictionary:
+	return compute_stats(p)["sources"]
+
+
+static func compute_stats(p: Dictionary) -> Dictionary:
+	var values := {}
+	var sources := {}
+	for k in Stats.ORDER:
+		values[k] = 0
+		sources[k] = []
+	var add := func(stat: String, label: String, amount: int) -> void:
+		if amount == 0:
+			return
+		values[stat] = int(values.get(stat, 0)) + amount
+		if not sources.has(stat):
+			sources[stat] = []
+		sources[stat].append([label, amount])
+
 	var lvl := int(p["level"])
-	var s := {
-		"max_hp": BASE_HP + (lvl - 1) * HP_PER_LEVEL,
-		"atk": BASE_ATK + (lvl - 1),
-		"def": BASE_DEF,
-		"regen_every": Rules.PLAYER_REGEN_EVERY,
-	}
+	for k in Stats.BASE:
+		add.call(k, "Base", int(Stats.BASE[k]))
+	for k in Stats.PER_LEVEL:
+		add.call(k, "Level %d" % lvl, int(Stats.PER_LEVEL[k]) * (lvl - 1))
 	for slot in p["equipment"]:
 		var item_id: String = p["equipment"][slot]
 		if item_id == "":
 			continue
 		var it := GameData.item(item_id)
-		s["atk"] += int(it.get("atk", 0))
-		s["def"] += int(it.get("def", 0))
-		s["max_hp"] += int(it.get("hp", 0))
+		var item_stats: Dictionary = it.get("stats", {})
+		for k in item_stats:
+			add.call(k, it["name"], int(item_stats[k]))
 	for e in p["essences"]:
-		var stats: Dictionary = GameData.essence(e).get("stats", {})
-		for k in stats:
-			s[k] = int(s.get(k, 0)) + int(stats[k])
-	if has_passive(p, "preservation"):
-		s["regen_every"] = mini(int(s["regen_every"]), 4)
+		var ess := GameData.essence(e)
+		var ess_stats: Dictionary = ess.get("stats", {})
+		for k in ess_stats:
+			add.call(k, ess["name"], int(ess_stats[k]))
 	if "undying_1" in p["engravings"]:
-		s["max_hp"] = int(s["max_hp"] * 1.2)
-		s["regen_every"] = mini(int(s["regen_every"]), 5)
-	return s
+		add.call("max_hp", "Undying Imprint (+20%)", int(int(values["max_hp"]) * 0.2))
+	add.call("atk", "Strength %d / 2" % int(values["strength"]), Stats.attack_from_strength(int(values["strength"])))
+
+	var regen := Rules.PLAYER_REGEN_EVERY
+	if has_passive(p, "preservation"):
+		regen = mini(regen, 4)
+	if "undying_1" in p["engravings"]:
+		regen = mini(regen, 5)
+	values["regen_every"] = regen
+	return {"values": values, "sources": sources}
 
 
 static func has_passive(p: Dictionary, passive: String) -> bool:

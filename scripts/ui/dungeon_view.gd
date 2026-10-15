@@ -66,6 +66,14 @@ func _draw() -> void:
 				draw_arc(center, TILE * 0.42, 0, TAU, 24, Color(accent, 0.9 if seen else 0.4), 2.5)
 				draw_arc(center, TILE * 0.22, 0, TAU, 16, Color(accent, 0.9 if seen else 0.4), 2.0)
 
+	for p in m.traps:
+		if m.traps[p] and m.explored[m.idx(p)] == 1:
+			var tc := _center(p)
+			var k := TILE * 0.22
+			var col := Color("#ff6b5e", 0.9 if run.fov.has(p) else 0.45)
+			draw_line(tc - Vector2(k, k), tc + Vector2(k, k), col, 3.0)
+			draw_line(tc + Vector2(-k, k), tc + Vector2(k, -k), col, 3.0)
+
 	for p in m.ground:
 		if not run.fov.has(p):
 			continue

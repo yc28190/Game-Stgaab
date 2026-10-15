@@ -10,6 +10,7 @@ var overlay := ""
 var _root: Control
 var _name: Label
 var _hp_bar: ProgressBar
+var _sp_bar: ProgressBar
 var _belly_bar: ProgressBar
 var _ally_bar: ProgressBar
 var _info: Label
@@ -37,6 +38,8 @@ func _ready() -> void:
 	box.add_child(_name)
 	_hp_bar = UI.bar(Color("#c94343"))
 	box.add_child(_hp_bar)
+	_sp_bar = UI.bar(Color("#4a7fd1"))
+	box.add_child(_sp_bar)
 	_belly_bar = UI.bar(Color("#c98a3a"))
 	box.add_child(_belly_bar)
 	_ally_bar = UI.bar(Color("#4f9e5a"))
@@ -97,6 +100,7 @@ func refresh() -> void:
 	var pl := run.player
 	_name.text = "Bjorn   Lv %d   EXP %d/%d" % [int(p["level"]), int(p["exp"]), Profile.exp_to_next(int(p["level"]))]
 	UI.set_bar(_hp_bar, pl.hp, pl.max_hp, "HP %d / %d" % [maxi(0, pl.hp), pl.max_hp])
+	UI.set_bar(_sp_bar, pl.sp, pl.max_sp, "SP %d / %d" % [pl.sp, pl.max_sp])
 	UI.set_bar(_belly_bar, run.satiety, Rules.SATIETY_MAX, "Belly %d / %d" % [ceili(run.satiety), int(Rules.SATIETY_MAX)])
 	var ainar := run.ally()
 	_ally_bar.visible = ainar != null
@@ -129,9 +133,10 @@ func refresh() -> void:
 		sk.append("No skills yet: absorb essences to gain them.")
 	for i in skills.size():
 		var cd := run.skill_cooldown(skills[i])
-		sk.append("[%d] %s - %s" % [i + 1, DungeonRun.SKILLS[skills[i]]["name"], "ready" if cd == 0 else "%d turns" % cd])
+		var skill: Dictionary = DungeonRun.SKILLS[skills[i]]
+		sk.append("[%d] %s (%d SP) - %s" % [i + 1, skill["name"], int(skill["sp"]), "ready" if cd == 0 else "%d turns" % cd])
 	sk.append("")
-	sk.append("I bag   R rest   T camp   Enter portal   H help")
+	sk.append("I bag   P stats   R rest   T camp   Enter portal   H help")
 	_skills.text = "\n".join(sk)
 	_minimap.queue_redraw()
 
@@ -190,13 +195,12 @@ func show_essence() -> void:
 	var e := GameData.essence(run.pending_essence)
 	var box := _open("essence", "An essence: " + e["name"])
 	var stats: Array[String] = []
-	var labels := {"max_hp": "HP", "atk": "ATK", "def": "DEF"}
 	for k in e.get("stats", {}):
-		stats.append("%s %+d" % [labels.get(k, k), int(e["stats"][k])])
+		stats.append("%s %+d" % [Stats.LABELS.get(k, k), int(e["stats"][k])])
 	box.add_child(UI.label("Grade %d.  Stats: %s" % [int(e["grade"]), ", ".join(stats)], 15))
 	if e.get("active", "") != "":
 		var s: Dictionary = DungeonRun.SKILLS[e["active"]]
-		box.add_child(UI.label("Active skill - %s: %s" % [s["name"], s["desc"]], 15, UI.TEXT, true))
+		box.add_child(UI.label("Active skill - %s (%d SP): %s" % [s["name"], int(s["sp"]), s["desc"]], 15, UI.TEXT, true))
 	if e.get("passive", "") != "":
 		box.add_child(UI.label("Passive: " + DungeonRun.PASSIVES[e["passive"]], 15, UI.TEXT, true))
 	box.add_child(UI.label(e.get("source", ""), 13, UI.DIM, true))
@@ -207,6 +211,16 @@ func show_essence() -> void:
 	var vials := Profile.count_item(run.inventory, "vial")
 	box.add_child(UI.button("Seal it in a vial to sell  [V]  (vials: %d)" % vials, func(): overlay_action.emit("store", ""), vials > 0))
 	box.add_child(UI.button("Leave it  [N]", func(): overlay_action.emit("leave", "")))
+
+
+func show_stats() -> void:
+	var box := _open("stats", "Character")
+	var scroll := ScrollContainer.new()
+	scroll.custom_minimum_size = Vector2(760, 470)
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	scroll.add_child(StatSheet.build(run.profile, run))
+	box.add_child(scroll)
+	box.add_child(UI.button("Close (Esc)", close_overlay))
 
 
 func show_help() -> void:

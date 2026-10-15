@@ -28,6 +28,9 @@ Fan project, prototype stage. Graphics are placeholder shapes.
 - **Portals:** north leads to the Goblin Forest (goblin packs and poison archers), west to the Deadlands (ghouls and regenerating deathfiends that summon ghouls). Your first trip through a portal **gives a level** (ch. 22).
 - **Essences:** monsters rarely drop one. Absorb it (permanent, **1 slot per level**), seal it in a vial to sell, or leave it. Essences give stats, passives (poison strikes, tracker's nose, regeneration) and active skills (Thief Step, Earth Gnome, Call of the Dead).
 - **Ainar** (Angry Rhino Inn) follows you, fights, and is your **night friend**: when you camp, she wakes you before monsters arrive. Alone, you only wake up when you're hit. She takes **20% of the mana stones** (8/2 split).
+- **Stats:** HP, SP (soul power), Strength, Physical and Magical Resistance, Agility, Speed, Perception,
+  Poison Resistance, Appetite and Threat Level. Each one has a real effect (see `scripts/core/stats.gd`).
+  Town shows HP, SP and Attack; the **Character** tab (or **P** in the labyrinth) shows every stat with its sources.
 - **Death:** you are dragged out of the labyrinth but lose everything you carried. Levels and essences stay.
 
 ## Controls
@@ -39,6 +42,7 @@ Fan project, prototype stage. Graphics are placeholder shapes.
 | Wait | Space, numpad 5 |
 | Portal | Enter |
 | Bag | I |
+| Character stats | P |
 | Essence skills | 1-4 |
 | Rest / camp | R / T |
 | Help | H |
