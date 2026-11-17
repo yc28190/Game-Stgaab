@@ -84,10 +84,6 @@ One-time setup: in the repo on GitHub, open **Settings → Pages** and set **Sou
 The `github-pages` environment only accepts deployments from the default branch unless you add other
 branches under **Settings → Environments → github-pages**.
 
-## Roadmap ideas
+## Roadmap
 
-- Real pixel-art tiles and sprites, animations, sound
-- More floors (Beasts' Lair, Rock Desert, 3rd floor+), rifts as special dungeons (Blood Citadel), floor bosses
-- Equipment drops, numbered items, Erwen and more recruitable companions with ally tactics
-- Other adventurers and pillagers as smart enemies
-- Spirit engraving tree, more essence skills, a selectable "essence build"
+See [TODO.md](TODO.md): every mechanic and gameplay loop extracted from the novel (ch. 1–944), with chapter references, what the prototype already does, and priorities.
