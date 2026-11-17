@@ -47,39 +47,53 @@ clans, gear) · **P3** late game and story content
 
 - [ ] **EXP is earned once per monster species**, "like filling a bestiary". Repeat kills give nothing. A rank 9
   monster gives 1 EXP and each rank higher gives +1. You run out of new species to farm (ch. 22, 50). Our
-  prototype currently gives EXP for every kill.
+  prototype currently gives EXP for every kill. *Verified:* no species gives its EXP twice in the whole story. The
+  record is per character (the alternate character has its own) and resets with a "playthrough" (ch. 907).
+  Exceptions: **rare species** give huge EXP (Soul Eater +177, ch. 264) and **Floor Lords give +100** (ch. 461,
+  489, 856).
 - [ ] **Cumulative EXP thresholds:** 6 → level 2, 30 → level 3, 150 → level 4, then it "explodes". You cannot
   reach level 5 even by killing every species below the 4th floor (ch. 50, 133).
 - [ ] **Bonus EXP sources:** opening a floor stele first gives +2 EXP and is a repeatable achievement (ch. 22).
   Guardian kill gives +3, high variant or mutant +1, killer bonus, Floor Lord bonus +15, first opening of a
-  hidden area +99, Book of Souls +3 (ch. 35, 300, 489, 507, 587). Replace our current "first portal = free
-  level".
-- [ ] **Level up:** +10 Soul Power per level up to level 5, +1 essence slot, and **no HP refill** (ch. 35,
-  202).
-- [ ] **The 1st floor has four edge portals:** north → Goblin Forest, east → Beasts' Lair, west → Rocky
-  Desert, south → Land of the Dead. The wiki has conflicting accounts for Blackrock Mountain. Your start
-  direction hints at which one you'll reach (ch. 12, 50, 216–222, 455). We currently have north → Goblin
-  Forest and west → "Deadlands".
+  hidden area +99, Book of Souls +3 (ch. 35, 300, 489, 507, 587). **Bonuses repeat** even when the species
+  EXP doesn't: a second King Slime gave only "Guardian Defeat Bonus +3" (ch. 583). The stele reward goes only to
+  the **first opener of the cycle** (ch. 89). Replace our current "first portal = free level".
+- [ ] **Level up:** Soul Power **+10 per level up to level 5, then +30 from level 6** (ch. 22, 166, 264, 365,
+  529). +1 essence slot. **No HP refill** (ch. 35, 202).
+- [ ] **EXP and levels can be lost:** Soul Slash can lower a level (ch. 32), a cursed box drains 5,000 EXP
+  (ch. 591), petrification costs about 1,000 EXP (ch. 620).
+- [~] **The 1st floor has four edge portals,** each tied to a monster district: goblins (north) → Goblin
+  Forest, blade wolves (east) → Beast Den, **ghouls (west) → Land of the Dead**, gnomes (south) → Rock Desert,
+  with **Blackrock Mountain on the southern route** (ch. 27, 50, 89, 110). The novel contradicts itself on
+  directions: ch. 110 calls the ghoul portal "south", ch. 219 calls the Rock Desert portal "western", and one
+  passage puts gnomes in the west. Use the canonical layout of ch. 27. Our prototype's north → Goblin Forest and
+  west → Land of the Dead ("Deadlands") are correct. Still missing: east → Beast Den and south → Rock Desert.
 - [ ] **Each floor closes at its own time.** 1F closes at 24:00 on Day 7, and its return portal still works on
-  Day 7. 2F closes on Day 10, 3F on Day 15 (ch. 13, 53, 115). We use one 7-day timer.
-- [ ] **Monster groups grow every day.** On the Land of the Dead the count triples from Day 3; deathfiends come
-  alone, then in pairs, then in threes (ch. 8, 23–24).
-- [ ] **Thirst** alongside hunger, with a water flask. There is a dehydration warning, and corpse flowers on 2F
-  are the only water source (ch. 6, 24). Hunger and thirst only apply inside the labyrinth.
-- [ ] **Potions take time to drink** and can't really be used mid-fight; high-grade potions cure paralysis
-  (ch. 5, 26).
+  Day 7. 2F closes on Day 10, 3F on Day 15, 5F after Day 30, **6F on Day 60**, 7F on Day 75 (ch. 13, 53, 115,
+  166, 284, 808, 890). We use one 7-day timer.
+- [ ] **Monster groups grow every day.** This is documented for 1F goblins and the Land of the Dead, where the
+  count triples from Day 3 and deathfiends come alone, then in pairs, then in threes (ch. 8, 23–24).
+- [ ] **Thirst** alongside hunger, with a water flask. There is a dehydration warning (ch. 6). Corpse flowers
+  are the only water source in the Land of the Dead (ch. 24).
+- [ ] **Potions hurt.** Fast regeneration causes intense pain ("my whole body is melting"), which is why the
+  game blocked potions in combat (ch. 5). In this world they *can* be used mid-fight if you can bear the pain:
+  Bjorn drinks them while tanking once he has Pain Resistance (ch. 35). Divine healing is painless. High-grade
+  potions cure paralysis (ch. 26).
 - [ ] **Essence colour:** one species drops several colours. The colour decides the active skill; the passive is
   the same for all colours. Guardian essences are **rainbow** (ch. 69, 103–104, 583).
 - [ ] **No duplicate essences** (ch. 622). A dropped essence **fades after about 30 minutes** if nobody
-  absorbs it (ch. 104, 374).
-- [ ] **Magic stone values follow the novel:** a goblin stone is worth about 1 bread (20 stones) and a deathfiend
-  about 100 (ch. 4, 24). Our values are inflated, so rebalance the whole economy together.
+  absorbs it, everywhere and not only in rifts (ch. 104, 374, 518).
+- [ ] **Economy: balance on income, not on the goblin-stone price.** In the *game*, a goblin stone averaged one
+  bread (≈20 stones, ch. 4), and a deathfiend stone ≈100 (ch. 24). But in-world earnings are far higher: 182,413
+  stones after Bjorn's first week ("nine thousand pieces of bread", ch. 16), and about 100,000 stones from 7 days
+  of hunting for two beginners (ch. 18). Target those incomes against a 700k tax.
 - [ ] **Bonding** (party link) instead of always starting together. Without Bonding, each member starts at a
   separate random point (ch. 4, 22).
 - [ ] **Party size:** 5 at first, 6 after the Bonding update (ch. 11, 351, 871).
-- [~] **SP vs MP.** In the novel, skills and spells spend **MP**. **Soul Power** is a stat that raises MP and
-  is checked when casting ("Soul Power is insufficient", ch. 71). MP regeneration is proportional to total MP
-  (ch. 383). Rename our "SP" bar to MP, and keep Soul Power as the stat feeding it.
+- [x] **Soul Power is the MP for essence skills** ("Soul Power, which acts as MP", ch. 22, 70, 71, 100). Our SP
+  bar is right. To add: other classes use other pools (mages mana, priests divine power, physical actions
+  stamina, ch. 166). Some skills cost nothing (Smash, ch. 6). Regeneration is proportional to the maximum
+  (ch. 383). Soul Power only rises through levels, a few essences, achievements and engravings (ch. 100).
 - [~] **Death.** The original game had permadeath (ch. 208). We currently use "dragged out, lose everything you
   carried". Decide on a difficulty option: permadeath as hardcore mode.
 
@@ -119,25 +133,30 @@ clans, gear) · **P3** late game and story content
 
 ### 2.3 Resources and survival meters
 - [x] HP. [x] Hunger (belly).
-- [ ] **MP** for skills and spells (see §1).
+- [ ] **Mana** (mages) and **Divine Power** (priests) as separate pools next to Soul Power (see §1).
 - [ ] **Mental Power:** drained by fear auras, and spent during the death countdown.
 - [ ] **Stamina:** an important stat. Below 10% the character can't move (ch. 56, 127).
 - [ ] **Fatigue and sleep:** you need sleep and a **night companion** to keep watch. "Night Companion" is shown
   as a status (ch. 6, 8–10). [~] Camping with Ainar on watch already exists.
 - [ ] **Death countdown:** at 0% HP a countdown starts that drains Mental Power each second. Natural
   Regeneration rises in proportion to Mental Power, and getting back above 1% cancels it. A PMD-style "last
-  chance" (ch. 35, 857).
+  chance" (ch. 35, 857). Variants: [Disapproval] only ends the countdown at 10% HP; [Source of Darkness] means
+  you can't die until your heart is destroyed (ch. 35).
 - [ ] **Instant-death vital spots** (head, heart) and hyper-regeneration bonuses (ch. 881).
 
 ### 2.4 Achievements: permanent rewards for conditions (ch. 5, 7, 25, 35, 56, 64, 107, 143, 166, 281, 381, 406, 461, 464, 558, 622, 785, 829)
 - [ ] HP below 2% → Mental Power +1 · HP below 0.1% → Mental +3 · survive the countdown → Mental +10
-- [ ] First murder · first player kill · first companion death (Mental +1 each) · kill count 10 · stamina
-  below 5%
+- [ ] Mental +1 each for: first murder, first player kill, first companion death, kill count 10, stamina below
+  5%, first rank 3 kill
 - [ ] Reach 5th floor (Soul Power +20) · reach 8th floor (Soul Power +50, "Baptism") · first Floor Lord
-  (Soul Power +50) · first rank 3 kill · first rank 1 kill
-- [ ] Hidden achievements: Mythical Discovery 1/5 (Soul Power +10) · Witch's Cabin after Riakis (Mental
-  Resistance +50) · Archives 15% progress (permanent access) · Dragon Heart (engraving stage 9+) · Land of the
-  Primeval Spirit (Soul Power +20, Earth Resistance +10)
+  (Soul Power +50) · first rank 1 kill (Soul Power +10)
+- [ ] Hidden achievements:
+  - **Mythical Discovery** 1/5, 2/5, 3/5 → Soul Power +10 / +20 / +30 (ch. 381, 829, 927)
+  - **Defeat Riakis** → reward "???" until revealed in the Witch's Cabin: Mental Resistance +50 (ch. 461–464)
+  - **Archives 15% progress** → permanent access (ch. 622)
+  - **Enter the Land of the Primeval Spirit** → Earth Resistance +10 (ch. 829)
+- [ ] **Quests with failure penalties**, e.g. "Dragon Heart": unlocks engraving stage 9+, and failure kills the
+  old shaman (ch. 785).
 - [ ] **Stone of Honor:** first-time feats engraved in the world (ch. 490–491).
 
 ---
@@ -150,8 +169,9 @@ clans, gear) · **P3** late game and story content
   33% of the time (ch. 13, 35, 541). Essences fade after 30 minutes.
 - [ ] **Rank (grade) 9 → 1.** Higher ranks give stronger effects, and EXP scales with rank.
 - [ ] **No duplicates.** Only **one Floor Lord essence** per character, and it can't be removed (ch. 461,
-  622, 856).
-- [ ] **Guild rank** is derived from the essences engraved on your soul (§8.3).
+  622, 856). **Corrupted** essences are locked for 180 days and can never be removed (ch. 803–804). For
+  barbarians, removal was once a tribal taboo (ch. 153).
+- [ ] **Guild rank** follows the essences you have absorbed and your equipment (§8.3).
 - [ ] **Synergies** between essences (e.g. the Yeti's Cold Condensation, ch. 110). Essences specific to one
   tribe (ch. 228). Transformation-type abilities (Discharge, ch. 35).
 - [ ] **Latent abilities** that awaken under conditions (wiki: Ainar's "Best Friend").
@@ -170,7 +190,8 @@ clans, gear) · **P3** late game and story content
   - [x] Stage 1 Undying.
   - [ ] Stages 2–8: stage 2 1M, stage 3 2M (Physical +50, much higher base threat; ch. 79), stage 4 4M (Mental
     +30, Ability +10, Soul Power), stage 5 8M (Physical +30, Mental +30, Stamina). Every 3rd stage you choose a
-    soul (Flame, Steel or Wildness). From stage 6 you need gathered materials (e.g. Vaiterion claws for stage
+    trait, and the options depend on the path: Immortal offers the Soul of Flames, Steel or the Wild (ch. 79),
+    while Slayer gave Ainar the skill [Devour] (ch. 174). From stage 6 you need gathered materials (e.g. Vaiterion claws for stage
     8); stage 9+ needs a Dragon Heart (ch. 77, 100, 115, 127, 666, 785).
 - [ ] **Soul Inheritance and "tempering":** 6 months of seclusion that greatly raises Physical and lets you
   inherit a master's essence (ch. 152).
@@ -199,8 +220,11 @@ clans, gear) · **P3** late game and story content
 - [ ] **Buff skills:** Gigantification / Giant Form (size raises threat and Physical), [Transcendence], Aura
   (the "strongest skill", knights; costly), Darkening Mode (ch. 69, 71, 242, 427, 854).
 - [ ] **Skills sealed** by field effects; passives always work (ch. 221, 427, 914).
-- [ ] **No skills in the city** (fine ≈300k) except at the Training Center (ch. 17, 207).
-- [ ] **Corpses vanish into light.** Gear only drops from killed explorers (ch. 13).
+- [ ] **No skills in the city** except at the Training Center (ch. 17, 207). The penalty is a fine (≈300k) or
+  exile to Bifron for 20 days (ch. 191, 194, 204).
+- [ ] **Corpses vanish into light** with their clothes and weapons (ch. 13). Gear comes from killed explorers,
+  Numbers Items and crafting. Exceptions: unranked deadmen (ch. 29), B1 "intact-corpse" monsters (ch. 509–528),
+  outside-the-wall monsters (ch. 664).
 - [ ] **Matchups:** monster kits with specific counters (fire burns the Corpse Golem's shell, holy water vs evil
   spirits, the heart must be destroyed for vampires and rank 3+; ch. 30–35, 59, 279).
 - [ ] **Instant-death and "must survive" boss mechanics:** Crack of Evil, timed phases, rage meters, enrage
@@ -250,9 +274,11 @@ clans, gear) · **P3** late game and story content
   marks a hidden piece (ch. 162, 504, 554).
 - [ ] **Special zones and field effects** applied on entry (Witch's Forest, Glacier Cave, Abyssal Fog, Recoil,
   Daemagyeong…) (ch. 56, 106, 221, 227, 600).
-- [ ] **Floor Lords:** one per floor with a hidden summon condition and phases. Drops: Floor Treasure, Floor
-  Stone (opens a rift) or Floor Essence. First kill promotes a clan. Raids need guild approval (ch. 65, 217,
-  460–461).
+- [ ] **Floor Lords:** one per floor with a hidden summon condition and phases. Drops: a **Floor Lord Artifact**,
+  a **Floor Lord Stone** (opens a rift on that floor once) or a **Floor Lord Essence** (ch. 461). The 1st-floor
+  Lord drops nothing significant (ch. 217). First kill promotes a clan. Raids need guild approval (ch. 65, 217,
+  460–461). Floor Lords normally stay on their own floor, but **Dimensional Collapse events** can bring one
+  elsewhere (Lord of Tears, ch. 912).
 - [ ] **Special Conditions and Hidden Pieces:** scripted secrets with cooldowns (ch. 27, 789).
 - [ ] **Dimensional Collapse:** unpredictable world catastrophe events (ch. 44, 90, 533, 833).
 - [ ] **Labyrinth closures** (sealed by the crown) disrupt the economy, and rift spawn rates spike after them
@@ -294,8 +320,10 @@ clans, gear) · **P3** late game and story content
 - [ ] **9F Star Grave**, **10F Abyss**, **B1 Archives**, **B2**, unknown floors (P3) (see §12).
 
 ### 7.3 Rifts: instance dungeons (P1 for the Blood Citadel, P2 for the rest)
-- [ ] **Opening:** they open naturally from Day 3 (the floor shakes and thousands of portals appear), or you
-  trigger them with an offering. Each has a cooldown of about 3 months. Party slots are filled first come,
+- [ ] **Opening:** a rift opens on its own at a random time (the floor shakes and thousands of portals appear),
+  or you trigger it with an offering at the monument. The cooldown is at least 3 cycles; natural openings usually
+  happen every 5–6 cycles (ch. 27–28). One rift opened on Day 1 (ch. 102), and the 2nd-floor rift won't open
+  after Day 7 (ch. 457). Party slots are filled first come,
   first served (5 per instance), and the portal closes when the team is full (ch. 27–28, 100–102, 218, 374).
 - [ ] **Structure:** chapters, a mid-boss, a guardian. The only exit is to kill the guardian. A cleared rift is
   the safest place to sleep (ch. 29, 34, 109).
@@ -322,8 +350,10 @@ clans, gear) · **P3** late game and story content
 - [ ] **Kill conditions:** heart or head (vampire, rank 3+); a deathfiend tackled to the ground can't get up
   (ch. 24, 279).
 - [ ] **Unranked monsters** (deadmen) give no stones or EXP and their bodies stay (ch. 29).
-- [ ] **Byproducts** (eyes, hearts…) only with **Distortion magic**, at the cost of the essence and stone
-  (ch. 115, 262, 664).
+- [ ] **Byproducts** (eyes, hearts…) only with **Distortion magic**, at the cost of the essence and stone.
+  Success is a chance roll: "extremely low" in general, 20% on a Millaroden, better with Advanced Distortion
+  (ch. 115, 159, 191, 262). **Outside the walls it's inverted:** monsters always drop byproducts, and Distortion
+  is what gives essences or stones (ch. 664).
 
 ---
 
@@ -331,9 +361,13 @@ clans, gear) · **P3** late game and story content
 
 ### 8.1 Calendar, taxes and law
 - [x] Monthly runs, living costs, annual tax, game over if unpaid.
-- [ ] One city day per expedition (return at noon). Real calendar: 13 months + the 13th month of festivals (the
-  last cycle lasts 35 days) (ch. 16, 231).
-- [ ] Tax by race and age (starts at 20); second year 800k plus exchange fee (ch. 18).
+- [ ] One city day per expedition (return at noon), then about 30 city days until the next opening (ch. 16, 808,
+  919). Real calendar: 13 months + the 13th month of festivals, with a clan-war tournament (the last cycle lasts
+  35 days) (ch. 16, 231). Exceptions: the B1 Archives run 1:1 with the city (ch. 525). From ch. 786 the crown
+  opens the labyrinth unannounced. The crown can also seal it for months (ch. 645–657, 773–774).
+- [ ] Tax by race and age (starts at 20, due at the new year); second year 800k plus exchange fee (ch. 18).
+  Exemptions: royal rewards (3 years of tax and exchange-fee exemption, ch. 173), births (2 years for barbarians,
+  more for humans, ch. 173, 248), minors (ch. 633), and a general exemption after the war (ch. 789).
 - [ ] Laws: no essence skills in town; duels need a notary; public executions; evil spirits are executed when
   discovered (ch. 17, 74–75, 174, 177).
 
@@ -352,8 +386,9 @@ clans, gear) · **P3** late game and story content
   120).
 
 ### 8.3 Explorers' Guild
-- [ ] **Explorer rank 9 → 1** based on the essences on your soul. Rank 5+ promotion needs a test unlocked by
-  **achievement points** from guild requests (ch. 22, 40, 48, 57, 77, 205).
+- [ ] **Explorer rank 9 → 1**, reflecting your essences *and* your equipment (ch. 48). The guild can promote you
+  as a reward (ch. 40). **Promotion evaluations start from 6th rank** (ch. 102: 6th = seasoned, 5th = high rank,
+  4th = top tier) and use **achievement points** from guild requests (ch. 22, 57, 77, 205).
 - [ ] **Bonding service** (15k for two rank 9s, ≈100k for five), party finder, team and clan registration
   (ch. 22, 88, 442).
 - [ ] **Requests and bounties** (paid once a temple confirms the kill), information sales (rank 8+ essences),
@@ -388,8 +423,9 @@ clans, gear) · **P3** late game and story content
   count as weapons (ch. 785).
 - [ ] **Numbers Items:** about 9,999 unique numbered items. Single-, double- and triple-digit tiers, Secret
   Numbers, and binding ("permanently bound to you"). Along with crafting and discovery they are the only way to
-  get special gear (ch. 42, 300, 490, 625, 735). The wiki has 56 pages in `number_item/`, for example:
-  - No. 9999 Beginner's Luck (extra drop rolls)
+  get special gear (ch. 42, 300, 490, 625, 735). They drop from guardians and also from some ordinary monsters
+  (ch. 682, 879). Each number is unique: No. 16 makes 29 temporary "tokens", not copies (ch. 794). The wiki has 56 pages in `number_item/`, for example:
+  - No. 9999 Beginner's Luck (a charm, about +5% drop rate, ch. 457)
   - No. 3 Wall of Aegis
   - No. 12 Trust (shared by bound teammates)
   - No. 444 Deadrius's Invitation (undead won't attack)
@@ -403,8 +439,8 @@ clans, gear) · **P3** late game and story content
   - (ch. 26, 59, 108, 163, 374, 540, 695)
 - [ ] **Inventory:** limited bag; expansion bags (a year's wages, ch. 63); pocket dimension (high-level mages,
   ch. 330); porters.
-- [ ] **Relics and legendary items:** Primordial Relics (one per tribe, ch. 43), Stone of Resurrection (revives
-  you but wipes memories and intimacy, ch. 158, 566), Philosopher's Stone (ch. 614).
+- [ ] **Relics and legendary items:** Primordial Relics (one per tribe, ch. 43), Stone of Resurrection (works only
+  right after death on an intact body, and wipes memories and intimacy, ch. 158, 566), Philosopher's Stone (ch. 614).
 
 ---
 
@@ -455,3 +491,58 @@ clans, gear) · **P3** late game and story content
 - [ ] One data file per floor and per rift: fields, monster tables per region and day, events, hidden pieces,
   bosses.
 - [ ] Tests for every new rule (EXP-once rule, floor timers, essence fading…), following `tests/run_tests.gd`.
+
+---
+
+## 14. Verification against the full story (ch. 1–944)
+
+Each rule above was checked against the whole text: by searching every chapter for passages that limit or
+contradict it, then reading those passages. Results:
+
+### Corrected (the first version of this TODO was wrong)
+| Rule | What the story actually says |
+|---|---|
+| 1F portals | District → field link is consistent; ghouls (west) → Land of the Dead, gnomes (south) → Rock Desert. The prototype's west → Land of the Dead was right. The text itself contradicts the directions in ch. 110 and 219. |
+| Soul Power on level up | +10 up to level 5, then **+30** from level 6 (ch. 264, 365, 529). |
+| SP vs MP | Soul Power **is** the MP for essence skills (ch. 22, 70, 71, 100). No rename needed. |
+| Potions in combat | Usable, but painful. The game blocked them; Bjorn drinks them while tanking (ch. 5, 35). |
+| Rank promotion | Evaluations start from **6th** rank, not 5th (ch. 102). Equipment counts too (ch. 48). |
+| Rift opening "from Day 3" | Not supported. Cooldown ≥3 cycles, usually 5–6; one opened on Day 1 (ch. 27, 102). |
+| Goblin stone = 20 stones | True for the *game*, but in-world earnings are ≈100k–180k per week (ch. 16, 18). Balance on income. |
+| Achievements | Land of the Primeval Spirit gives only Earth Resistance +10. Mythical Discovery scales +10/+20/+30. Rank 1 first kill gives Soul Power +10. "Dragon Heart" is a quest with a failure penalty (ch. 558, 785, 829, 927). |
+| Floor Lord drops | Artifact / Stone / Essence (ch. 461), not "Floor Treasure". |
+| "Hunger and thirst only inside" | Not stated anywhere in the novel; removed. |
+| Beginner's Luck | ≈ +5% drop rate (ch. 457), not "extra rolls". |
+
+### Confirmed, with exceptions to implement
+| Rule | Exceptions found |
+|---|---|
+| EXP once per species | Tracked per character (alternate character) and reset by playthroughs (ch. 907). Bonuses repeat (ch. 583). Rare species (+177, ch. 264) and Floor Lords (+100) break the rank formula. EXP and levels can be lost (ch. 32, 591, 620). |
+| One city day per run | B1 Archives run 1:1 (ch. 525). Unannounced openings from ch. 786. Labyrinth closures (ch. 645–657, 773–774). |
+| Floor closing times | Add 6F = Day 60 (ch. 284, 890, 921). |
+| Essence removal at temples | Floor Lord and corrupted essences can't be removed (ch. 461, 803–804). Old barbarian taboo (ch. 153). |
+| Essence fades after 30 min | Applies everywhere, not just rifts (ch. 518). |
+| Taxes or execution | Several exemptions (ch. 173, 248, 633, 789). |
+| Skill ban in the city | Penalty can be 20 days of exile to Bifron (ch. 194). |
+| Corpses vanish | Deadmen, B1 corpse monsters, outside monsters (ch. 29, 509–528, 664). |
+| Distortion → byproducts | Chance-based (ch. 115, 191). Inverted outside the walls (ch. 664). One item only in some zones (ch. 169). |
+| Floor Lords stay on their floor | Not during Dimensional Collapse events (ch. 912). |
+| Engraving "3rd-stage soul" | The options depend on the path (ch. 79, 174). |
+| Numbers Items | Also dropped by some ordinary monsters (ch. 682, 879). Uniqueness holds (No. 16 tokens, ch. 794). |
+| Stone of Resurrection | Only right after death, with an intact body (ch. 566). |
+| Death countdown | [Disapproval] variant ends at 10% (ch. 35). |
+
+### Confirmed with no contradiction found
+- EXP rank formula for normal monsters, cumulative thresholds 6/30/150, no HP refill on level up, one essence
+  slot per level (ch. 22, 35, 50)
+- Essence colour → active skill, same passive across colours (ch. 70, 104, 139, 332, 620); no duplicates (ch. 622)
+- Bonding limit of 5, later 6 (ch. 57, 157, 351); the dimensional-instability exploit stops after the Magic Tower
+  fix (ch. 263)
+- Spirit engraving prices for stages 3–5 (ch. 79, 100, 127); taxes from age 20 with execution (several chapters);
+  the 13-month calendar (ch. 231)
+- Only one exit from a rift, by killing the guardian (ch. 34); one Floor Lord essence per character (ch. 461, 856)
+
+### Taken from the wiki and not re-checked line by line
+Per-location details in §7.2 (field effects, boss phases, hidden-piece steps) and city prices in §8 come from the
+wiki's place pages, which cite their chapters. One wiki claim looks wrong: the timeline says a clan was
+suspected of owning "3 copies of No. 16 Ebony Emblem". The text describes one item creating 29 tokens (ch. 794).
