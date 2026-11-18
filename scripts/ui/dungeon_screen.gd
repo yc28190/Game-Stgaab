@@ -2,6 +2,9 @@ class_name DungeonScreen
 extends Node
 ## Hooks keyboard and mouse input to the DungeonRun and keeps the view and HUD in sync.
 
+## Emitted as soon as the run ends, so the result (a death above all) is saved before anything else.
+signal run_ended(run: DungeonRun)
+## Emitted when the player leaves the end screen.
 signal run_over(run: DungeonRun)
 
 const AUTO_STEP_SECONDS := 0.06
@@ -14,6 +17,7 @@ var view: DungeonView
 var hud: Hud
 var _auto_path: Array[Vector2i] = []
 var _auto_timer := 0.0
+var _ended_emitted := false
 ## Set when a monster shows up while a key is held: repeats stay off until the key is pressed again.
 var _hold_stopped := false
 
@@ -67,10 +71,12 @@ func _unhandled_input(event: InputEvent) -> void:
 			match key:
 				KEY_Y:
 					_on_overlay_action("absorb", "")
+				KEY_U:
+					_on_overlay_action("give", "")
 				KEY_V:
 					_on_overlay_action("store", "")
 				KEY_N, KEY_ESCAPE:
-					_on_overlay_action("leave", "")
+					_on_overlay_action("later", "")
 			return
 		"inventory", "help", "stats":
 			if key in [KEY_ESCAPE, KEY_I, KEY_H, KEY_F1, KEY_P]:
@@ -90,6 +96,9 @@ func _unhandled_input(event: InputEvent) -> void:
 					run.say("There is no portal here.")
 			KEY_I:
 				hud.show_inventory()
+			KEY_G:
+				if not run.reopen_essence():
+					run.say("There is no essence here.")
 			KEY_P:
 				hud.show_stats()
 			KEY_H, KEY_F1:
@@ -176,8 +185,11 @@ func _on_overlay_action(action: String, arg: String) -> void:
 		"store":
 			if run.store_essence():
 				hud.close_overlay()
-		"leave":
-			run.leave_essence()
+		"give":
+			if run.give_essence_to_ally():
+				hud.close_overlay()
+		"later":
+			run.postpone_essence()
 			hud.close_overlay()
 		"finish":
 			_finish()
@@ -191,6 +203,9 @@ func _after_action() -> void:
 	if run.over:
 		_auto_path.clear()
 		if hud.overlay != "end":
+			if not _ended_emitted:
+				_ended_emitted = true
+				run_ended.emit(run)
 			hud.show_end()
 	elif run.pending_essence != "" and hud.overlay != "essence":
 		_auto_path.clear()

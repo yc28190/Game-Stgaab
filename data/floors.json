@@ -1,41 +1,378 @@
 {
 	"crystal_cave": {
-		"name": "1st Floor - Crystal Cave", "depth": 1,
-		"width": 80, "height": 60, "rooms": 20,
-		"floor_color": "#2c3346", "wall_color": "#5d7196", "dark_floor_color": "#222736", "accent": "#7fd6ff",
-		"dark_room_chance": 0.45, "dark_corridors": true,
-		"regions": {"N": ["goblin"], "W": ["ghoul"], "E": ["blade_wolf"], "S": ["gnome"], "C": ["goblin", "ghoul", "blade_wolf", "gnome"]},
-		"pack": [1, 1],
-		"initial_monsters": 26, "max_monsters": 40, "respawn_every": 25,
-		"traps": {"region": "N", "count": 8},
+		"name": "1st Floor - Crystal Cave",
+		"depth": 1,
+		"width": 80,
+		"height": 60,
+		"rooms": 20,
+		"floor_color": "#2c3346",
+		"wall_color": "#5d7196",
+		"dark_floor_color": "#222736",
+		"accent": "#7fd6ff",
+		"regions": {
+			"N": [
+				"goblin"
+			],
+			"W": [
+				"ghoul"
+			],
+			"E": [
+				"blade_wolf"
+			],
+			"S": [
+				"gnome"
+			],
+			"C": [
+				"goblin",
+				"ghoul",
+				"blade_wolf",
+				"gnome"
+			]
+		},
+		"pack": [
+			1,
+			1
+		],
+		"initial_monsters": 26,
+		"max_monsters": 40,
+		"respawn_every": 4500,
+		"traps": {
+			"region": "N",
+			"count": 8
+		},
 		"items": 10,
-		"portals": [{"region": "N", "to": "goblin_forest"}, {"region": "W", "to": "deadlands"}],
-		"source": "Crystal Cave: goblins north, ghouls west, blade wolves east, gnomes south (bestiary ch. 4, 11, 25). Dark zones (ch. 2-10)."
+		"portals": [
+			{
+				"region": "N",
+				"to": "goblin_forest"
+			},
+			{
+				"region": "E",
+				"to": "beast_den"
+			},
+			{
+				"region": "W",
+				"to": "land_of_the_dead"
+			},
+			{
+				"region": "S",
+				"to": "rock_desert"
+			}
+		],
+		"source": "Crystal Cave: goblins north, ghouls west, blade wolves east, gnomes south; crystals light the floor except the outermost area leading to the 2nd floor and the central dark zone (ch. 4, 27). Closes at the end of Day 7 (ch. 13).",
+		"dark_zones": "outer_center",
+		"closes_day": 7,
+		"cap_by_day": [
+			1.0,
+			1.15,
+			1.3,
+			1.45,
+			1.6,
+			1.75,
+			1.9
+		],
+		"mutant_chance": 0.06
 	},
 	"goblin_forest": {
-		"name": "2nd Floor - Goblin Forest", "depth": 2,
-		"width": 80, "height": 60, "rooms": 22,
-		"floor_color": "#23361f", "wall_color": "#3f6b35", "dark_floor_color": "#1c2d19", "accent": "#b5d64a",
-		"dark_room_chance": 0.0, "dark_corridors": false,
-		"regions": {"N": ["goblin", "goblin", "goblin_archer"], "W": ["goblin", "goblin", "goblin_archer"], "E": ["goblin", "goblin", "goblin_archer"], "S": ["goblin", "goblin", "goblin_archer"], "C": ["goblin", "goblin_archer"]},
-		"pack": [3, 6],
-		"initial_monsters": 9, "max_monsters": 14, "respawn_every": 40,
-		"traps": {"region": "any", "count": 12},
+		"name": "2nd Floor - Goblin Forest",
+		"depth": 2,
+		"width": 80,
+		"height": 60,
+		"rooms": 22,
+		"floor_color": "#23361f",
+		"wall_color": "#3f6b35",
+		"dark_floor_color": "#1c2d19",
+		"accent": "#b5d64a",
+		"regions": {
+			"N": [
+				"goblin",
+				"goblin",
+				"goblin_swordsman",
+				"goblin_archer"
+			],
+			"S": [
+				"goblin",
+				"goblin",
+				"goblin_swordsman",
+				"goblin_archer"
+			],
+			"E": [
+				"goblin",
+				"goblin",
+				"goblin_swordsman",
+				"goblin_archer"
+			],
+			"W": [
+				"goblin",
+				"goblin",
+				"goblin_swordsman",
+				"goblin_archer"
+			],
+			"C": [
+				"goblin",
+				"goblin",
+				"goblin_swordsman",
+				"goblin_archer"
+			]
+		},
+		"pack": [
+			3,
+			6
+		],
+		"initial_monsters": 9,
+		"max_monsters": 14,
+		"respawn_every": 7200,
+		"traps": {
+			"region": "any",
+			"count": 12
+		},
 		"items": 10,
-		"portals": [{"region": "C", "to": "crystal_cave"}],
-		"source": "Goblin Forest: groups of ~10 goblins with swordsmen and archers, traps (ch. 11-13)."
+		"portals": [
+			{
+				"region": "C",
+				"to": "crystal_cave"
+			}
+		],
+		"source": "Goblin Forest: groups of ~10 goblins with swordsmen and archers, traps (ch. 11-13).",
+		"dark_zones": "none",
+		"closes_day": 10,
+		"cap_by_day": [
+			1.0,
+			1.1,
+			1.2,
+			1.3,
+			1.4,
+			1.5,
+			1.6,
+			1.7,
+			1.8,
+			1.9
+		],
+		"mutant_chance": 0.08
 	},
-	"deadlands": {
-		"name": "2nd Floor - Deadlands", "depth": 2,
-		"width": 80, "height": 60, "rooms": 20,
-		"floor_color": "#30283a", "wall_color": "#5e4a72", "dark_floor_color": "#271f30", "accent": "#9b6bd6",
-		"dark_room_chance": 0.25, "dark_corridors": false,
-		"regions": {"N": ["deathfiend", "ghoul", "ghoul"], "W": ["deathfiend", "ghoul", "ghoul"], "E": ["deathfiend", "ghoul", "ghoul"], "S": ["deathfiend", "ghoul", "ghoul"], "C": ["ghoul", "deathfiend"]},
-		"pack": [1, 1],
-		"initial_monsters": 20, "max_monsters": 30, "respawn_every": 30,
-		"traps": {"region": "none", "count": 0},
+	"land_of_the_dead": {
+		"name": "2nd Floor - Land of the Dead",
+		"depth": 2,
+		"width": 80,
+		"height": 60,
+		"rooms": 20,
+		"floor_color": "#30283a",
+		"wall_color": "#5e4a72",
+		"dark_floor_color": "#271f30",
+		"accent": "#9b6bd6",
+		"dark_room_chance": 0.25,
+		"regions": {
+			"N": [
+				"deathfiend"
+			],
+			"S": [
+				"skeleton",
+				"skeleton_warrior",
+				"skeleton_archer",
+				"ghoul"
+			],
+			"E": [
+				"skeleton",
+				"skeleton_warrior",
+				"elder_ghoul",
+				"ghoul"
+			],
+			"W": [
+				"skeleton",
+				"skeleton_archer",
+				"elder_ghoul",
+				"ghoul"
+			],
+			"C": [
+				"skeleton",
+				"skeleton_warrior",
+				"skeleton_archer",
+				"elder_ghoul",
+				"ghoul"
+			]
+		},
+		"pack": [
+			1,
+			1
+		],
+		"initial_monsters": 16,
+		"max_monsters": 22,
+		"respawn_every": 5400,
+		"traps": {
+			"region": "none",
+			"count": 0
+		},
 		"items": 10,
-		"portals": [{"region": "C", "to": "crystal_cave"}],
-		"source": "Deadlands / Land of the Dead: deathfiends and ghouls (ch. 23-24)."
+		"portals": [
+			{
+				"region": "S",
+				"to": "crystal_cave"
+			}
+		],
+		"source": "Land of the Dead: grade 9 undead near the start, deathfiend territory to the north; monster numbers triple from Day 3; deathfiends come alone, then in pairs, then in threes (ch. 23-24). Closes on Day 10 (ch. 13).",
+		"pack_by_day": {
+			"deathfiend": [
+				1,
+				2,
+				3
+			]
+		},
+		"cap_by_day": [
+			1.0,
+			1.5,
+			3.0
+		],
+		"dark_zones": "rooms",
+		"closes_day": 10,
+		"mutant_chance": 0.05
+	},
+	"beast_den": {
+		"name": "2nd Floor - Beast Den",
+		"depth": 2,
+		"width": 80,
+		"height": 60,
+		"rooms": 24,
+		"floor_color": "#3a2f24",
+		"wall_color": "#6b5640",
+		"dark_floor_color": "#251d16",
+		"accent": "#e0a040",
+		"dark_zones": "none",
+		"regions": {
+			"N": [
+				"saber_tiger",
+				"werewolf"
+			],
+			"S": [
+				"giant_blade_wolf",
+				"bloodblade_wolf",
+				"wall_mole",
+				"crescent_rock_bear"
+			],
+			"E": [
+				"giant_blade_wolf",
+				"wall_mole",
+				"wall_mole_queen",
+				"crescent_rock_bear"
+			],
+			"W": [
+				"bloodblade_wolf",
+				"wall_mole",
+				"crescent_rock_bear"
+			],
+			"C": [
+				"giant_blade_wolf",
+				"bloodblade_wolf",
+				"wall_mole",
+				"wall_mole_queen",
+				"crescent_rock_bear"
+			]
+		},
+		"pack": [
+			1,
+			3
+		],
+		"initial_monsters": 16,
+		"max_monsters": 24,
+		"respawn_every": 5400,
+		"traps": {
+			"region": "none",
+			"count": 0
+		},
+		"items": 8,
+		"portals": [
+			{
+				"region": "S",
+				"to": "crystal_cave"
+			}
+		],
+		"closes_day": 10,
+		"cap_by_day": [
+			1.0,
+			1.1,
+			1.2,
+			1.3,
+			1.4,
+			1.5,
+			1.6,
+			1.7,
+			1.8,
+			1.9
+		],
+		"mutant_chance": 0.06,
+		"source": "Beast Den: a canyon of beast-type monsters reached from the blade wolf district; no traps, but pits and maze-like forks; only grade 8 in the black-cliffed depths (ch. 50)."
+	},
+	"rock_desert": {
+		"name": "2nd Floor - Rock Desert",
+		"depth": 2,
+		"width": 80,
+		"height": 60,
+		"rooms": 20,
+		"floor_color": "#4a3f2e",
+		"wall_color": "#8a7454",
+		"dark_floor_color": "#2e271c",
+		"accent": "#d8b070",
+		"dark_zones": "none",
+		"regions": {
+			"N": [
+				"stone_golem",
+				"kobold",
+				"kobold_shield_soldier"
+			],
+			"S": [
+				"gnome",
+				"corrupted_gnome",
+				"kobold"
+			],
+			"E": [
+				"kobold",
+				"kobold_shield_soldier",
+				"corrupted_gnome"
+			],
+			"W": [
+				"kobold",
+				"kobold_shield_soldier",
+				"gnome"
+			],
+			"C": [
+				"gnome",
+				"corrupted_gnome",
+				"kobold",
+				"kobold_shield_soldier",
+				"stone_golem"
+			]
+		},
+		"pack": [
+			1,
+			3
+		],
+		"initial_monsters": 16,
+		"max_monsters": 24,
+		"respawn_every": 5400,
+		"traps": {
+			"region": "none",
+			"count": 0
+		},
+		"items": 8,
+		"portals": [
+			{
+				"region": "S",
+				"to": "crystal_cave"
+			}
+		],
+		"closes_day": 10,
+		"cap_by_day": [
+			1.0,
+			1.1,
+			1.2,
+			1.3,
+			1.4,
+			1.5,
+			1.6,
+			1.7,
+			1.8,
+			1.9
+		],
+		"mutant_chance": 0.06,
+		"source": "Rock Desert: reached from the gnome district; gnome mutants, three kinds of kobold, grade 8 stone golems; Blackrock Mountain lies on this southern route (ch. 27, 89)."
 	}
 }

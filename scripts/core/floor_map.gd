@@ -16,6 +16,10 @@ var room_regions: Array[String] = []
 var portals := {}
 ## Vector2i -> true when revealed
 var traps := {}
+## Portal Vector2i -> game time (seconds) at which a rival party opens that stele this cycle.
+var stele_rival_time := {}
+## Portal Vector2i -> true once the player has touched it this run.
+var steles_opened := {}
 ## Vector2i -> Array of ground entries: {"kind": "item"|"stone"|"essence", ...}
 var ground := {}
 ## Monsters left on this floor while the party is elsewhere.

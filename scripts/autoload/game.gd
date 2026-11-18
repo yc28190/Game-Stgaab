@@ -22,8 +22,7 @@ func load_game() -> bool:
 	var data = JSON.parse_string(f.get_as_text())
 	if not data is Dictionary or not data.has("version"):
 		return false
-	profile = Profile.create()
-	profile.merge(data, true)
+	profile = Profile.migrate(data)
 	return true
 
 

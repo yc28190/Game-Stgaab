@@ -8,9 +8,12 @@
 			"strength": 2
 		},
 		"passive": "",
-		"active": "",
 		"sell": 400000,
-		"source": "ch. 19 - the novel gives no numbers; stat values are gameplay placeholders"
+		"source": "ch. 19 - the novel gives no numbers; stat values are gameplay placeholders",
+		"colors": {
+			"green": ""
+		},
+		"color_note": "colour names are placeholders: the novel doesn't give this essence's colours"
 	},
 	"goblin_archer": {
 		"name": "Goblin Archer Essence",
@@ -22,9 +25,12 @@
 			"poison_res": 4
 		},
 		"passive": "poison_strike",
-		"active": "thief_step",
 		"sell": 700000,
-		"source": "ch. 13 - Agility +2, Perception +2 and Vision +6 (merged into Perception +4), Poison Tolerance +4; Poison Arrow (passive), Thief Step (active)"
+		"source": "ch. 13 - Agility +2, Perception +2 and Vision +6 (merged into Perception +4), Poison Tolerance +4; Poison Arrow (passive), Thief Step (active)",
+		"colors": {
+			"white": "thief_step"
+		},
+		"color_note": "colour names are placeholders: the novel doesn't give this essence's colours"
 	},
 	"blade_wolf": {
 		"name": "Blade Wolf Essence",
@@ -36,9 +42,12 @@
 			"speed": 10
 		},
 		"passive": "tracker_nose",
-		"active": "",
 		"sell": 500000,
-		"source": "ch. 11 - enhanced sense of smell for tracking; stat values are gameplay placeholders"
+		"source": "ch. 11 - enhanced sense of smell for tracking; stat values are gameplay placeholders",
+		"colors": {
+			"silver": ""
+		},
+		"color_note": "colour names are placeholders: the novel doesn't give this essence's colours"
 	},
 	"gnome": {
 		"name": "Gnome Essence",
@@ -50,9 +59,12 @@
 			"threat": -3
 		},
 		"passive": "",
-		"active": "earth_gnome",
 		"sell": 600000,
-		"source": "ch. 25 - Earth Gnome: blend into the surroundings, cannot move while it lasts; stat values are gameplay placeholders"
+		"source": "ch. 25 - Earth Gnome: blend into the surroundings, cannot move while it lasts; stat values are gameplay placeholders",
+		"colors": {
+			"brown": "earth_gnome"
+		},
+		"color_note": "colour names are placeholders: the novel doesn't give this essence's colours"
 	},
 	"deathfiend": {
 		"name": "Deathfiend Essence",
@@ -65,8 +77,27 @@
 			"appetite": 3
 		},
 		"passive": "preservation",
-		"active": "call_of_the_dead",
 		"sell": 2000000,
-		"source": "ch. 23-24 - Preservation of the Flesh, Call of the Dead (coveted essence); stat values are gameplay placeholders"
+		"source": "ch. 23-24 - Preservation of the Flesh, Call of the Dead (coveted essence); stat values are gameplay placeholders",
+		"colors": {
+			"purple": "call_of_the_dead"
+		},
+		"color_note": "colour names are placeholders: the novel doesn't give this essence's colours"
+	},
+	"stone_golem": {
+		"name": "Stone Golem Essence",
+		"grade": 8,
+		"color": "#9aa0a8",
+		"stats": {
+			"phys_res": 2,
+			"max_hp": 10
+		},
+		"passive": "",
+		"colors": {
+			"gray": "suppression"
+		},
+		"sell": 1500000,
+		"source": "ch. 25 - Suppression: temporarily paralyses the target; any damage breaks it. Stats are placeholders",
+		"color_note": "colour name is a placeholder"
 	}
 }

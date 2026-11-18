@@ -27,7 +27,7 @@ func _ready() -> void:
 		"starved": "You collapsed from hunger and were dragged out",
 	}
 	box.add_child(UI.label(titles.get(report["reason"], "Back in Rafdonia"), 26, UI.ACCENT, true))
-	var minutes := int(report["turns"]) * Rules.MINUTES_PER_TURN
+	var minutes := int(int(report["seconds"]) / 60.0)
 	box.add_child(UI.label("Time in the labyrinth: %d days %d hours" % [int(minutes / 1440.0), int((minutes % 1440) / 60.0)], 16))
 	box.add_child(UI.label("Monsters killed: %d    EXP gained: %d    Levels gained: %d" % [int(report["kills"]), int(report["exp"]), int(report["levels"])], 16))
 	for e in report["essences"]:
@@ -45,6 +45,8 @@ func _ready() -> void:
 		for m in share:
 			n += int(share[m])
 		box.add_child(UI.label("Ainar takes her share (8/2 split): %d mana stones." % n, 15, UI.DIM))
+	if report.get("ally_died", false):
+		box.add_child(UI.label("Ainar died in the labyrinth. Her countdown ran out.", 16, UI.BAD, true))
 	if report["lost"]:
 		box.add_child(UI.label("Everything you carried was lost: your bag and your mana stones. Essences and levels stay with you.", 16, UI.BAD, true))
 	for e in report["stored"]:

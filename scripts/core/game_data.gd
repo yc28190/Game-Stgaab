@@ -22,6 +22,16 @@ static func essence(id: String) -> Dictionary:
 	return table("essences")[id]
 
 
+## Colour names an essence can drop with; the colour decides its active skill (novel ch. 70, 104, 332).
+static func essence_colors(id: String) -> Array:
+	return (essence(id).get("colors", {"default": ""}) as Dictionary).keys()
+
+
+static func essence_active(id: String, color: String) -> String:
+	var colors: Dictionary = essence(id).get("colors", {})
+	return colors.get(color, "")
+
+
 static func item(id: String) -> Dictionary:
 	return table("items")[id]
 

@@ -11,7 +11,8 @@
 		"type": "heal",
 		"heal": 40,
 		"price": 20000,
-		"desc": "Restores 40 HP. Like the Parthran potion Drusz gave Bjorn (ch. 5)."
+		"desc": "Restores 40 HP at once, but the rapid regeneration is agonising: you lose 4 combat turns writhing, 1 fewer per 20 Pain Resistance. (ch. 5)",
+		"pain": true
 	},
 	"antidote": {
 		"name": "Antidote",
@@ -97,5 +98,14 @@
 		"stats": {
 			"phys_res": 1
 		}
+	},
+	"greatsword": {
+		"name": "Greatsword",
+		"type": "weapon",
+		"stats": {
+			"atk": 2
+		},
+		"price": 150000,
+		"desc": "Ainar's weapon of choice (ch. 3, 22)."
 	}
 }

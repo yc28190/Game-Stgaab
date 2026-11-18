@@ -98,16 +98,24 @@ func _ready() -> void:
 func refresh() -> void:
 	var p := run.profile
 	var pl := run.player
-	_name.text = "Bjorn   Lv %d   EXP %d/%d" % [int(p["level"]), int(p["exp"]), Profile.exp_to_next(int(p["level"]))]
-	UI.set_bar(_hp_bar, pl.hp, pl.max_hp, "HP %d / %d" % [maxi(0, pl.hp), pl.max_hp])
-	UI.set_bar(_sp_bar, pl.sp, pl.max_sp, "SP %d / %d" % [pl.sp, pl.max_sp])
+	var nxt := Profile.exp_for_next(int(p["level"]))
+	_name.text = "Bjorn   Lv %d   EXP %d%s" % [int(p["level"]), int(p["exp"]), ("/%d" % nxt) if nxt > 0 else " (max level)"]
+	if pl.in_countdown:
+		UI.set_bar(_hp_bar, pl.mental, pl.max_mental, "COUNTDOWN  Mental %d / %d" % [int(pl.mental), pl.max_mental])
+	else:
+		UI.set_bar(_hp_bar, pl.hp, pl.max_hp, "HP %d / %d" % [maxi(0, pl.hp), pl.max_hp])
+	UI.set_bar(_sp_bar, pl.sp, pl.max_sp, "SP %d / %d" % [int(pl.sp), pl.max_sp])
 	UI.set_bar(_belly_bar, run.satiety, Rules.SATIETY_MAX, "Belly %d / %d" % [ceili(run.satiety), int(Rules.SATIETY_MAX)])
 	var ainar := run.ally()
 	_ally_bar.visible = ainar != null
 	if ainar != null:
-		UI.set_bar(_ally_bar, ainar.hp, ainar.max_hp, "Ainar %d / %d" % [maxi(0, ainar.hp), ainar.max_hp])
+		var lv := int(ainar.companion.get("level", 1))
+		if ainar.in_countdown:
+			UI.set_bar(_ally_bar, ainar.mental, ainar.max_mental, "Ainar COUNTDOWN  Mental %d" % int(ainar.mental))
+		else:
+			UI.set_bar(_ally_bar, ainar.hp, ainar.max_hp, "Ainar Lv %d   %d / %d" % [lv, maxi(0, ainar.hp), ainar.max_hp])
 	var lines: Array[String] = []
-	lines.append(run.map.def()["name"])
+	lines.append(run.map.def()["name"] + ("   [COMBAT: 6 s turns]" if run.in_combat() else ""))
 	lines.append("%s   (closes in %s)" % [run.time_string(), run.time_left_string()])
 	var stone_count := 0
 	for m in run.mana_stones:
@@ -116,9 +124,11 @@ func refresh() -> void:
 	var st: Array[String] = []
 	if run.map.is_dark(pl.pos):
 		st.append("in the dark")
-	if run.torch_turns > 0:
-		st.append("torch %dh" % ceili(run.torch_turns * Rules.MINUTES_PER_TURN / 60.0))
-	for k in ["stealth", "poison", "immobile"]:
+	if run.torch_seconds > 0:
+		st.append("torch %dh" % ceili(run.torch_seconds / 3600.0))
+	if not run.essence_here().is_empty() and run.pending_essence == "":
+		st.append("essence here [G]")
+	for k in ["stealth", "poison", "immobile", "paralyzed"]:
 		if pl.status.has(k):
 			st.append(k)
 	if run.satiety <= 0.0:
@@ -192,25 +202,35 @@ func show_inventory() -> void:
 
 
 func show_essence() -> void:
-	var e := GameData.essence(run.pending_essence)
+	var id := run.pending_essence
+	var e := GameData.essence(id)
+	var color := run.pending_essence_color()
 	var box := _open("essence", "An essence: " + e["name"])
 	var stats: Array[String] = []
 	for k in e.get("stats", {}):
 		stats.append("%s %+d" % [Stats.LABELS.get(k, k), int(e["stats"][k])])
-	box.add_child(UI.label("Grade %d.  Stats: %s" % [int(e["grade"]), ", ".join(stats)], 15))
-	if e.get("active", "") != "":
-		var s: Dictionary = DungeonRun.SKILLS[e["active"]]
-		box.add_child(UI.label("Active skill - %s (%d SP): %s" % [s["name"], int(s["sp"]), s["desc"]], 15, UI.TEXT, true))
+	box.add_child(UI.label("Grade %d, colour: %s.  Stats: %s" % [int(e["grade"]), color, ", ".join(stats)], 15, UI.TEXT, true))
+	var active := GameData.essence_active(id, color)
+	if active != "":
+		var s: Dictionary = DungeonRun.SKILLS[active]
+		box.add_child(UI.label("Active skill (decided by the colour) - %s (%d SP): %s" % [s["name"], int(s["sp"]), s["desc"]], 15, UI.TEXT, true))
 	if e.get("passive", "") != "":
-		box.add_child(UI.label("Passive: " + DungeonRun.PASSIVES[e["passive"]], 15, UI.TEXT, true))
+		box.add_child(UI.label("Passive (same for every colour): " + DungeonRun.PASSIVES[e["passive"]], 15, UI.TEXT, true))
 	box.add_child(UI.label(e.get("source", ""), 13, UI.DIM, true))
 	var used := (run.profile["essences"] as Array).size()
 	var slots := Profile.essence_slots(run.profile)
-	box.add_child(UI.label("Essence slots used: %d / %d (one per level). Absorbing is permanent." % [used, slots], 14, UI.DIM, true))
-	box.add_child(UI.button("Absorb it  [Y]", func(): overlay_action.emit("absorb", ""), used < slots))
+	box.add_child(UI.label("Essence slots used: %d / %d (one per level). Absorbing is permanent, and you can't hold the same essence twice. It fades about 30 minutes after dropping." % [used, slots], 14, UI.DIM, true))
+	var why := Profile.can_absorb(run.profile, id)
+	box.add_child(UI.button("Absorb it  [Y]" + ("" if why == "" else "  (%s)" % why), func(): overlay_action.emit("absorb", ""), why == ""))
+	var a := run.ally()
+	if a != null and a.alive():
+		var why2 := Profile.can_absorb(a.companion, id)
+		var near := DungeonRun.cheb(a.pos, run.player.pos) <= 1
+		var note := why2 if why2 != "" else ("" if near else "she must be next to you")
+		box.add_child(UI.button("Let Ainar absorb it  [U]" + ("" if note == "" else "  (%s)" % note), func(): overlay_action.emit("give", ""), note == ""))
 	var vials := Profile.count_item(run.inventory, "vial")
 	box.add_child(UI.button("Seal it in a vial to sell  [V]  (vials: %d)" % vials, func(): overlay_action.emit("store", ""), vials > 0))
-	box.add_child(UI.button("Leave it  [N]", func(): overlay_action.emit("leave", "")))
+	box.add_child(UI.button("Not now  [Esc]  (press G on it later)", func(): overlay_action.emit("later", "")))
 
 
 func show_stats() -> void:
@@ -228,11 +248,14 @@ func show_help() -> void:
 	box.add_child(UI.label(UI.CONTROLS_HELP, 15, UI.TEXT, true))
 	box.add_child(UI.separator())
 	box.add_child(UI.label(
-		"Survive 7 days. Each action takes 3 minutes. Your belly empties over time: eat rock-bread or starve.\n"
+		"The 1st floor closes at the end of Day 7, the 2nd at the end of Day 10. Exploring, a turn is 3 minutes; in combat, 6 seconds.\n"
+		+ "Your belly empties over time: eat rock-bread or starve. Potions heal at once but the pain costs you 4 combat turns.\n"
+		+ "At 0 HP a countdown burns your Mental Power: heal above 1% before it runs out or you die.\n"
 		+ "Dark zones hide you from monsters, but you only see 2 tiles. A torch lights them up, for you and for them.\n"
-		+ "Monsters drop mana stones (sell them in town) and, rarely, an essence. You get one essence slot per level.\n"
+		+ "Monsters drop mana stones (sell them in town) and, very rarely, an essence. One essence slot per level.\n"
+		+ "EXP comes only from species you've never killed before (and from opening a stele first). Levels cap at 4 for now.\n"
 		+ "Camp to sleep and heal fast. Alone, you only wake when you're hit. With Ainar on watch, she wakes you.\n"
-		+ "Find the portals on the edges of the floor. Going through one for the first time gives you a level.",
+		+ "Four portals on the edges of the 1st floor lead to four different 2nd floors. Be the first to touch a stele this cycle for EXP.",
 		14, UI.DIM, true))
 	box.add_child(UI.button("Close (Esc)", close_overlay))
 

@@ -26,7 +26,9 @@ static func build(p: Dictionary, run: DungeonRun = null) -> Control:
 		if run != null and stat == "max_hp":
 			shown = "%d / %d" % [maxi(0, run.player.hp), value]
 		elif run != null and stat == "max_sp":
-			shown = "%d / %d" % [run.player.sp, value]
+			shown = "%d / %d" % [int(run.player.sp), value]
+		elif run != null and stat == "mental":
+			shown = "%d / %d" % [int(run.player.mental), value]
 		grid.add_child(UI.label(Stats.LABELS[stat], 15, UI.TEXT))
 		var base := int(Stats.BASE.get(stat, value))
 		var color := UI.GOOD if value > base else (UI.BAD if value < base else UI.TEXT)

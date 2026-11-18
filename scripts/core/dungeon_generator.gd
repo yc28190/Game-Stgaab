@@ -11,16 +11,8 @@ static func generate(floor_id: String, rng: RandomNumberGenerator) -> FloorMap:
 	_place_rooms(m, int(d["rooms"]), rng)
 	_connect_rooms(m, rng)
 	for i in m.rooms.size():
-		var r := m.rooms[i]
-		m.room_regions.append(m.region_at(r.get_center()))
-		if rng.randf() < float(d["dark_room_chance"]):
-			_fill_dark(m, r.grow(1))
-	if d["dark_corridors"]:
-		for y in m.height:
-			for x in m.width:
-				var p := Vector2i(x, y)
-				if m.is_walkable(p) and m.room_index_at(p) == -1:
-					m.dark[m.idx(p)] = 1
+		m.room_regions.append(m.region_at(m.rooms[i].get_center()))
+	_apply_darkness(m, d, rng)
 	_place_portals(m, d["portals"], rng)
 	_place_traps(m, d["traps"], rng)
 	_place_items(m, int(d["items"]), rng)
@@ -79,6 +71,33 @@ static func _carve_line(m: FloorMap, a: Vector2i, b: Vector2i) -> void:
 	while p != b:
 		p += step
 		m.set_tile(p, FloorMap.FLOOR)
+
+
+## "outer_center": crystals light the floor except the outermost area and the central dark zone (1F, ch. 4, 27).
+## "rooms": some rooms are dark at random. "none": everything is lit.
+static func _apply_darkness(m: FloorMap, d: Dictionary, rng: RandomNumberGenerator) -> void:
+	match d.get("dark_zones", "none"):
+		"outer_center":
+			for i in m.rooms.size():
+				var r := m.rooms[i]
+				if is_outer(m, r.get_center()) or m.room_regions[i] == "C":
+					_fill_dark(m, r.grow(1))
+			for y in m.height:
+				for x in m.width:
+					var p := Vector2i(x, y)
+					if m.is_walkable(p) and m.room_index_at(p) == -1 and (is_outer(m, p) or m.region_at(p) == "C"):
+						m.dark[m.idx(p)] = 1
+		"rooms":
+			for i in m.rooms.size():
+				if rng.randf() < float(d.get("dark_room_chance", 0.0)):
+					_fill_dark(m, m.rooms[i].grow(1))
+
+
+## The outermost band of a floor, where the portals to the next floor stand.
+static func is_outer(m: FloorMap, p: Vector2i) -> bool:
+	var band_x := int(m.width * 0.16)
+	var band_y := int(m.height * 0.16)
+	return p.x < band_x or p.y < band_y or p.x >= m.width - band_x or p.y >= m.height - band_y
 
 
 static func _fill_dark(m: FloorMap, r: Rect2i) -> void:

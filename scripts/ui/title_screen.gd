@@ -29,7 +29,7 @@ func _ready() -> void:
 	box.add_child(UI.separator())
 	var intro := UI.label(
 		"You are Bjorn, son of Yandel: a gamer who woke up as a barbarian inside Dungeon and Stone. "
-		+ "The labyrinth opens once a month for 7 days. Hunt monsters, collect mana stones and essences, "
+		+ "The labyrinth opens once a month: the 1st floor for 7 days, the 2nd for 10. Hunt monsters, collect mana stones and essences, "
 		+ "and come back alive. The yearly tax is 700,000 stones, and those who can't pay are executed.",
 		15, UI.TEXT, true)
 	box.add_child(intro)

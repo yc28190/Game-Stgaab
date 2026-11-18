@@ -45,55 +45,61 @@ clans, gear) · **P3** late game and story content
 
 ## 1. Fix the prototype where it contradicts the novel (P1)
 
-- [ ] **EXP is earned once per monster species**, "like filling a bestiary". Repeat kills give nothing. A rank 9
-  monster gives 1 EXP and each rank higher gives +1. You run out of new species to farm (ch. 22, 50). Our
-  prototype currently gives EXP for every kill. *Verified:* no species gives its EXP twice in the whole story. The
-  record is per character (the alternate character has its own) and resets with a "playthrough" (ch. 907).
-  Exceptions: **rare species** give huge EXP (Soul Eater +177, ch. 264) and **Floor Lords give +100** (ch. 461,
-  489, 856).
-- [ ] **Cumulative EXP thresholds:** 6 → level 2, 30 → level 3, 150 → level 4, then it "explodes". You cannot
-  reach level 5 even by killing every species below the 4th floor (ch. 50, 133).
-- [ ] **Bonus EXP sources:** opening a floor stele first gives +2 EXP and is a repeatable achievement (ch. 22).
-  Guardian kill gives +3, high variant or mutant +1, killer bonus, Floor Lord bonus +15, first opening of a
-  hidden area +99, Book of Souls +3 (ch. 35, 300, 489, 507, 587). **Bonuses repeat** even when the species
-  EXP doesn't: a second King Slime gave only "Guardian Defeat Bonus +3" (ch. 583). The stele reward goes only to
-  the **first opener of the cycle** (ch. 89). Replace our current "first portal = free level".
-- [ ] **Level up:** Soul Power **+10 per level up to level 5, then +30 from level 6** (ch. 22, 166, 264, 365,
-  529). +1 essence slot. **No HP refill** (ch. 35, 202).
-- [ ] **EXP and levels can be lost:** Soul Slash can lower a level (ch. 32), a cursed box drains 5,000 EXP
-  (ch. 591), petrification costs about 1,000 EXP (ch. 620).
-- [~] **The 1st floor has four edge portals,** each tied to a monster district: goblins (north) → Goblin
-  Forest, blade wolves (east) → Beast Den, **ghouls (west) → Land of the Dead**, gnomes (south) → Rock Desert,
-  with **Blackrock Mountain on the southern route** (ch. 27, 50, 89, 110). The novel contradicts itself on
-  directions: ch. 110 calls the ghoul portal "south", ch. 219 calls the Rock Desert portal "western", and one
-  passage puts gnomes in the west. Use the canonical layout of ch. 27. Our prototype's north → Goblin Forest and
-  west → Land of the Dead ("Deadlands") are correct. Still missing: east → Beast Den and south → Rock Desert.
-- [ ] **Each floor closes at its own time.** 1F closes at 24:00 on Day 7, and its return portal still works on
-  Day 7. 2F closes on Day 10, 3F on Day 15, 5F after Day 30, **6F on Day 60**, 7F on Day 75 (ch. 13, 53, 115,
-  166, 284, 808, 890). We use one 7-day timer.
-- [ ] **Monster groups grow every day.** This is documented for 1F goblins and the Land of the Dead, where the
-  count triples from Day 3 and deathfiends come alone, then in pairs, then in threes (ch. 8, 23–24).
-- [ ] **Thirst** alongside hunger, with a water flask. There is a dehydration warning (ch. 6). Corpse flowers
-  are the only water source in the Land of the Dead (ch. 24).
-- [ ] **Potions hurt.** Fast regeneration causes intense pain ("my whole body is melting"), which is why the
-  game blocked potions in combat (ch. 5). In this world they *can* be used mid-fight if you can bear the pain:
-  Bjorn drinks them while tanking once he has Pain Resistance (ch. 35). Divine healing is painless. High-grade
-  potions cure paralysis (ch. 26).
-- [ ] **Essence colour:** one species drops several colours. The colour decides the active skill; the passive is
-  the same for all colours. Guardian essences are **rainbow** (ch. 69, 103–104, 583).
-- [ ] **No duplicate essences** (ch. 622). A dropped essence **fades after about 30 minutes** if nobody
-  absorbs it, everywhere and not only in rifts (ch. 104, 374, 518).
-- [ ] **Economy: balance on income, not on the goblin-stone price.** In the *game*, a goblin stone averaged one
-  bread (≈20 stones, ch. 4), and a deathfiend stone ≈100 (ch. 24). But in-world earnings are far higher: 182,413
-  stones after Bjorn's first week ("nine thousand pieces of bread", ch. 16), and about 100,000 stones from 7 days
-  of hunting for two beginners (ch. 18). Target those incomes against a 700k tax.
-- [ ] **Bonding** (party link) instead of always starting together. Without Bonding, each member starts at a
-  separate random point (ch. 4, 22).
-- [ ] **Party size:** 5 at first, 6 after the Bonding update (ch. 11, 351, 871).
-- [x] **Soul Power is the MP for essence skills** ("Soul Power, which acts as MP", ch. 22, 70, 71, 100). Our SP
-  bar is right. To add: other classes use other pools (mages mana, priests divine power, physical actions
-  stamina, ch. 166). Some skills cost nothing (Smash, ch. 6). Regeneration is proportional to the maximum
-  (ch. 383). Soul Power only rises through levels, a few essences, achievements and engravings (ch. 100).
+Done in the audit fix (see the decisions in brackets, made with the architect where the novel gives no numbers).
+
+- [x] **EXP once per monster species**, like filling a bestiary: rank 9 = 1 EXP, +1 per rank (ch. 22, 50).
+  Shared by the bonded party, each member with their own bestiary (ch. 23). Mutants give +1 bonus EXP.
+  - [ ] Still to do: rare species with huge EXP (Soul Eater +177, ch. 264), Floor Lords +100, guardian bonus +3,
+    a per-playthrough reset (ch. 907).
+- [x] **Cumulative EXP thresholds** 6 / 30 / 150. *[Capped at level 4 until the novel's later thresholds are
+  known; they "explode" after that (ch. 50).]*
+- [x] **Floor steles:** the first explorer to touch one in a cycle gets +2 EXP (ch. 22, 89). Rival parties open
+  each stele 6–30 hours after the opening (ch. 49, 89, 151). The "first portal = free level" rule is gone.
+- [x] **Level up:** +10 Soul Power (+30 from level 6) and +1 essence slot, nothing else, no HP refill (ch. 22, 35,
+  264). HP and Strength no longer grow with levels.
+- [ ] **EXP and levels can be lost:** Soul Slash (ch. 32), cursed boxes (ch. 591), petrification (ch. 620).
+- [x] **Four edge portals** on the 1st floor: north to Goblin Forest, east to Beast Den, west to Land of the Dead,
+  south to Rock Desert (ch. 27, 50, 89, 110). Beast Den and Rock Desert added with the species of ch. 50 and 89;
+  "Deadlands" renamed Land of the Dead with its undead from ch. 23.
+- [x] **Each floor closes at its own time:** 1F end of Day 7, 2F end of Day 10. When 1F closes, the way back
+  vanishes and the 2nd floor stays open (ch. 13, 53). *[Combat slows the clock to 6-second turns.]*
+  - [ ] Later floors: 3F Day 15, 5F Day 30, 6F Day 60, 7F Day 75 (ch. 115, 166, 284, 808).
+- [x] **Monster groups grow every day**, tripling from Day 3 in the Land of the Dead; deathfiends come alone, then
+  in pairs, then in threes (ch. 8, 23–24).
+- [x] ~~Thirst~~: not wanted in this game (architect's decision).
+- [x] **Potions hurt:** they heal at once, then you lose 4 combat turns writhing, 1 fewer per 20 Pain Resistance
+  (ch. 5, 35). *[Numbers chosen by the architect.]*
+  - [ ] Divine healing (painless) once priests exist; high-grade potions that cure paralysis (ch. 26).
+- [x] **Essence colour** decides the active skill; the passive is the same for every colour. *[The colours of
+  our five essences aren't in the novel or the wiki: they're placeholders, one colour each.]*
+  - [ ] Rainbow guardian essences once rifts exist (ch. 583).
+- [x] **No duplicate essences** (ch. 622); unabsorbed essences **fade after 30 minutes** (ch. 104, 374, 518).
+  *[Drop rate 0.5% outside rifts.]* The decision can be postponed and reopened with G.
+- [x] **Economy balanced on income:** rank 9 stones 700, rank 8 3,500 (the novel's 1:5 ratio), giving about
+  70k–105k for a full 7-day run (ch. 18: about 100,000).
+- [x] **Bonding:** a binding spell at the guild costs 15,000 (ch. 22); without it Ainar starts elsewhere.
+- [ ] **Party size:** 5 at first, 6 after the Bonding update (ch. 11, 351, 871). Only one companion exists so far.
+- [x] **Soul Power is the MP for essence skills** (ch. 22, 70, 71, 100). It now regenerates in proportion to its
+  maximum (20% per hour, ch. 383).
+  - [ ] Mana for mages, divine power for priests, stamina (ch. 166).
+- [x] **Death countdown:** at 0 HP you keep acting while the countdown burns 3 Mental Power per second (18 per
+  6-second combat turn); Natural Regeneration, boosted by Mental Power, or a heal above 1% cancels it (ch. 35, 428,
+  857). Applies to Ainar too. Achievement for surviving it (Mental +10).
+- [x] **Undying Imprint stage 1:** Natural Regeneration greatly increases and physical stats +20 (ch. 21).
+  *[Translated as regeneration +4 HP/hour, Strength +2, Physical Resistance +1.]*
+- [x] **Ainar:** her own level, bestiary and essences, barbarian threat, eats from your bag, permanent death
+  (with the "first companion death" achievement, Mental +1).
+- [x] **Monster behaviour:** ghouls wait motionless (ch. 11), deathfiends stay in their territory and call 10
+  ghouls when hurt (ch. 24), stone golems use [Suppression], which Magic Resistance resists and damage breaks
+  (ch. 25, 103). Mutants, stronger in the outer areas (ch. 12).
+- [x] **Darkness on the 1st floor:** only the outer area and the central dark zone (ch. 4, 27).
+- [x] **Tax:** 700k, then +100k every year, with a 10% exchange fee from year 2 (ch. 18). The last cycle lasts 35
+  days (13th month). *[Increase and fee chosen by the architect.]*
+- [x] **Saving:** a run's result is saved the moment it ends, so a death can't be undone; quitting mid-run still
+  abandons the run (architect's decision).
+- [x] **Sleeping rough:** if you can't pay the month's living costs, you pay what you have and start the next run
+  hungry and sore; money never goes negative.
+- [x] Magic stone storage stays unlimited (architect's decision).
 - [~] **Death.** The original game had permadeath (ch. 208). We currently use "dragged out, lose everything you
   carried". Decide on a difficulty option: permadeath as hardcore mode.
 

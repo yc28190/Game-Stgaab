@@ -14,10 +14,16 @@ var pos := Vector2i.ZERO
 var hp := 1
 var max_hp := 1
 var max_sp := 0
-var sp := 0
+var sp := 0.0
+## Mental Power: burnt by the death countdown (3 per second).
+var mental := 0.0
+var max_mental := 0
 var atk := 1
 var phys_res := 0
 var magic_res := 0
+var pain_res := 0
+## Natural Regeneration in HP per hour.
+var regen_per_hour := 0.0
 var agility := 10
 var speed := 100
 var perception := 10
@@ -28,9 +34,12 @@ var sight := 7
 var ai := "melee"
 var attack_range := 1
 var poison_on_hit := false
+## Monster regeneration: HP per turn (deathfiend's Preservation of the Flesh).
 var regen := 0
-var regen_every := 0
 var data := {}
+var mutant := false
+## Where a territorial monster lives; it won't chase far from here (deathfiends, ch. 24).
+var home := Vector2i(-1, -1)
 ## Status name -> turns left (-1 = until removed).
 var status := {}
 var cooldowns := {}
@@ -38,13 +47,20 @@ var last_seen := Vector2i(-1, -1)
 var wander_goal := Vector2i(-1, -1)
 ## Turns before a summoned actor disappears (-1 = permanent).
 var lifetime := -1
+## True while at 0 HP: the death countdown is running.
+var in_countdown := false
+## Companion only: belly and the saved progression dict (level, bestiary, essences...).
+var satiety := Rules.SATIETY_MAX
+var companion := {}
+## Fractional regeneration carried between turns.
+var _regen_acc := 0.0
 
 
 func alive() -> bool:
-	return hp > 0
+	return hp > 0 or in_countdown
 
 
-static func from_monster(monster_id: String) -> Actor:
+static func from_monster(monster_id: String, is_mutant: bool = false) -> Actor:
 	var d := GameData.monster(monster_id)
 	var a := Actor.new()
 	a.id = monster_id
@@ -53,7 +69,6 @@ static func from_monster(monster_id: String) -> Actor:
 	a.glyph = d["glyph"]
 	a.color = Color(d["color"])
 	a.max_hp = int(d["hp"])
-	a.hp = a.max_hp
 	a.atk = int(d["atk"])
 	a.phys_res = int(d.get("phys_res", 0))
 	a.magic_res = int(d.get("magic_res", 0))
@@ -68,22 +83,40 @@ static func from_monster(monster_id: String) -> Actor:
 	a.data = d
 	if d.get("hidden", false):
 		a.status["hidden"] = -1
+	if is_mutant:
+		# Mutants: stronger variants, more common in the outer areas (ch. 12), with a bonus EXP (ch. 35).
+		a.mutant = true
+		a.name = "Mutant " + a.name
+		a.max_hp = int(round(a.max_hp * 1.6))
+		a.atk += 2
+		a.phys_res += 1
+		a.agility += 2
+		a.color = a.color.lerp(Color("#ff4fd8"), 0.45)
+	a.hp = a.max_hp
 	return a
 
 
-static func make_ainar(level: int) -> Actor:
+## Builds an ally from its saved companion dict (Ainar has her own level, bestiary and essences).
+static func make_companion(c: Dictionary) -> Actor:
+	var s := Profile.companion_stats(c)
 	var a := Actor.new()
-	a.id = "ainar"
+	a.id = c["id"]
 	a.name = "Ainar"
 	a.faction = PARTY
 	a.glyph = "A"
 	a.color = Color("#e05a4f")
-	a.max_hp = 55 + (level - 1) * 8
+	a.companion = c
+	a.max_hp = int(s["max_hp"])
 	a.hp = a.max_hp
-	a.atk = 7 + level
-	a.phys_res = 2
-	a.agility = 11
-	a.threat = 9
+	a.atk = int(s["atk"])
+	a.phys_res = int(s["phys_res"])
+	a.magic_res = int(s["magic_res"])
+	a.pain_res = int(s["pain_res"])
+	a.agility = int(s["agility"])
+	a.poison_res = int(s["poison_res"])
+	a.threat = int(s["threat"])
+	a.max_mental = int(s["mental"])
+	a.mental = a.max_mental
+	a.regen_per_hour = float(s["regen"])
 	a.sight = 7
-	a.regen_every = Rules.PLAYER_REGEN_EVERY
 	return a
